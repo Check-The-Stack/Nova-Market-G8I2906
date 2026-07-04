@@ -10,18 +10,6 @@ Plataforma e-commerce MVP para venta de productos tecnológicos.
 | Backend | Node.js + Express + TypeScript + Prisma |
 | DB | PostgreSQL |
 | Auth | JWT |
-| Project | [Trello](https://trello.com/b/yHZs5QmF) |
-
-## Estructura
-
-```
-nova-market/
-├── frontend/     # React SPA
-├── backend/      # Express REST API + Prisma
-├── docs/         # Documentación, análisis, prototipos (UX/UI)
-├── tests/        # Test plan, casos de prueba, reportes (QA)
-└── README.md
-```
 
 ## Requisitos
 
@@ -33,8 +21,7 @@ nova-market/
 ```bash
 pnpm install
 cd backend
-cp .env.example .env
-# Configurar DATABASE_URL y JWT_SECRET
+cp .env.example .env   # configurar DATABASE_URL y JWT_SECRET
 npx prisma generate
 npx prisma db push
 npx prisma db seed
@@ -49,9 +36,8 @@ pnpm dev
 Frontend → http://localhost:3000
 Backend  → http://localhost:4000
 
-## Equipo
+## Documentación
 
-- Frontend: componentes, estado, rutas, estilos
-- Backend: API, Prisma, auth, validación
-- UX/UI: investigación, prototipos, diseño visual
-- QA: test plan, casos de prueba, reportes
+- `docs/` — Requerimientos, arquitectura, proto-persona, navegación
+- `tests/` — Test plan y casos de prueba
+- `CONTEXT.md` — Reglas del proyecto para el equipo
