@@ -4,7 +4,7 @@
 - **Runtime**: Node.js
 - **Base de datos**: PostgreSQL
 - **Package manager**: pnpm (no usar npm)
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind
+- **Frontend**: Next.js 14 + React 18 + TypeScript + Tailwind
 - **Backend**: Express + TypeScript + Prisma
 - **Auth**: JWT
 - **Orquestación**: TurboRepo
