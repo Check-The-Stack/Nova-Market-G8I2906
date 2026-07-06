@@ -2,7 +2,7 @@
 
 ## Stack
 - **Runtime**: Node.js
-- **Base de datos**: PostgreSQL
+- **Base de datos**: PostgreSQL via Supabase
 - **Package manager**: pnpm (no usar npm)
 - **Frontend**: Next.js 14 + React 18 + TypeScript + Tailwind
 - **Backend**: Express + TypeScript + Prisma

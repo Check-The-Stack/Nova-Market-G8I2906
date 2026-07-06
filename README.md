@@ -8,7 +8,7 @@ Plataforma e-commerce MVP para venta de productos tecnológicos.
 |------|-----------|
 | Frontend | React 18 + TypeScript + Vite + Tailwind |
 | Backend | Node.js + Express + TypeScript + Prisma |
-| DB | PostgreSQL |
+| DB | PostgreSQL via Supabase |
 | Auth | JWT |
 
 ## Requisitos

@@ -6,7 +6,7 @@
 |------|-----------|
 | Frontend | React 18 + TypeScript + Vite + Tailwind CSS |
 | Backend | Node.js + Express + TypeScript |
-| DB | PostgreSQL (Prisma ORM) |
+| DB | PostgreSQL via Supabase (Prisma ORM) |
 | Auth | JWT (jsonwebtoken + bcryptjs) |
 | Validación | Zod |
 | Paquetería | pnpm workspace |
