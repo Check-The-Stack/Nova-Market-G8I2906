@@ -7,8 +7,8 @@
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
 
-    --primary: 263.4 70% 50.4%; /* Morado premium de acento */
-    --primary-hover: 263.4 70% 42%;
+    --primary: 221.2 92.4% 47.8%; /* Azul rey de acento */
+    --primary-hover: 221.2 92.4% 39%;
     --primary-foreground: 210 20% 98%;
 
     --secondary: 220 14.3% 95.9%;
@@ -17,7 +17,7 @@
     --muted: 220 14.3% 95.9%;
     --muted-foreground: 220 8.9% 46.1%;
 
-    --accent: 262.1 83.3% 57.8%;
+    --accent: 221.2 92.4% 47.8%;
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -25,7 +25,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 263.4 70% 50.4%;
+    --ring: 221.2 92.4% 47.8%;
 
     --radius: 0.75rem;
   }
@@ -34,8 +34,8 @@
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
 
-    --primary: 263.4 70% 50.4%;
-    --primary-hover: 263.4 70% 58%;
+    --primary: 221.2 92.4% 47.8%;
+    --primary-hover: 221.2 92.4% 55%;
     --primary-foreground: 210 20% 98%;
 
     --secondary: 215 27.9% 16.9%;
@@ -44,7 +44,7 @@
     --muted: 215 27.9% 16.9%;
     --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 263.4 70% 50.4%;
+    --accent: 221.2 92.4% 47.8%;
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -52,7 +52,7 @@
 
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+    --ring: 221.2 92.4% 47.8%;
   }
 }
 
