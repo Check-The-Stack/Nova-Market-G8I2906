@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
 
-  const productId = params.id as string;
+  const productId = (params?.id as string) ?? "";
   const product = MOCK_PRODUCTS.find((p) => p.id === productId);
 
   if (!product) {
