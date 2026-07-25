@@ -1,188 +1,248 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useCart } from "../context/CartContext";
 import { Product } from "../types";
 
-// Datos mockup iniciales para el Catálogo de Tecnología
-const MOCK_PRODUCTS: Product[] = [
+const TRENDING_PRODUCTS: Product[] = [
   {
-    id: "p1",
-    name: "MacBook Pro M3 14\"",
-    slug: "macbook-pro-m3-14",
-    description: "Chip M3 con CPU de 8 núcleos y GPU de 10 núcleos, memoria unificada de 8 GB, SSD de 512 GB.",
-    price: 1599,
-    category: "Laptops",
-    imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=600&auto=format&fit=crop",
-    stock: 5,
+    id: "t1",
+    name: "OmniHub Smart Terminal",
+    slug: "omnihub-smart-terminal",
+    description: "Unified control for your entire ecosystem with Matter support and AI",
+    price: 129.5,
+    category: "Smart Home",
+    imageUrl: "https://images.unsplash.com/photo-1543512214-318c7553f230?q=80&w=600&auto=format&fit=crop",
+    stock: 10,
     featured: true,
   },
   {
-    id: "p2",
-    name: "iPhone 15 Pro",
-    slug: "iphone-15-pro",
-    description: "Diseño de titanio de calidad aeroespacial, chip A17 Pro, sistema de cámaras Pro súper potente.",
-    price: 999,
-    category: "Celulares",
-    imageUrl: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=600&auto=format&fit=crop",
+    id: "t2",
+    name: "OmniHub Smart Terminal",
+    slug: "omnihub-smart-terminal-2",
+    description: "Unified control for your entire ecosystem with Matter support and AI",
+    price: 129.5,
+    category: "Smart Home",
+    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+    stock: 8,
+    featured: true,
+  },
+  {
+    id: "t3",
+    name: "OmniHub Smart Terminal",
+    slug: "omnihub-smart-terminal-3",
+    description: "Unified control for your entire ecosystem with Matter support and AI",
+    price: 129.5,
+    category: "Smart Home",
+    imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=600&auto=format&fit=crop",
     stock: 12,
     featured: true,
   },
   {
-    id: "p3",
-    name: "Auriculares Sony WH-1000XM5",
-    slug: "sony-wh-1000xm5",
-    description: "Noise cancelling líder de la industria, calidad de sonido excepcional con audio de alta resolución sin cables.",
-    price: 349,
-    category: "Audio",
-    imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
-    stock: 8,
-    featured: false,
-  },
-  {
-    id: "p4",
-    name: "Monitor Gaming 27\" QHD",
-    slug: "monitor-gaming-27-qhd",
-    description: "Panel IPS con resolución QHD de 2560x1440 píxeles, frecuencia de actualización de 165Hz y 1ms de tiempo de respuesta.",
-    price: 299,
-    category: "Monitores",
-    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=600&auto=format&fit=crop",
-    stock: 3,
-    featured: false,
-  },
-  {
-    id: "p5",
-    name: "Teclado Mecánico Custom 65%",
-    slug: "teclado-mecanico-custom-65",
-    description: "Interruptores lineales lubricados de fábrica, chasis de aluminio, retroiluminación RGB configurable.",
-    price: 189,
-    category: "Accesorios",
-    imageUrl: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=600&auto=format&fit=crop",
-    stock: 15,
+    id: "t4",
+    name: "OmniHub Smart Terminal",
+    slug: "omnihub-smart-terminal-4",
+    description: "Unified control for your entire ecosystem with Matter support and AI",
+    price: 129.5,
+    category: "Smart Home",
+    imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=600&auto=format&fit=crop",
+    stock: 5,
     featured: true,
   },
 ];
 
-const CATEGORIES = ["Todos", "Laptops", "Celulares", "Audio", "Monitores", "Accesorios"];
-
-export default function Home() {
+export default function HomePage() {
   const { addItem } = useCart();
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
 
-  const filteredProducts = selectedCategory === "Todos"
-    ? MOCK_PRODUCTS
-    : MOCK_PRODUCTS.filter(p => p.category === selectedCategory);
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   return (
-    <div className="flex-grow pb-16">
-      {/* Hero Banner */}
-      <section className="relative overflow-hidden bg-secondary/30 border-b border-border py-20 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto flex flex-col items-center text-center">
-          <span className="text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 px-3 py-1.5 rounded-full mb-6">
-            Novedades Tecnológicas
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground max-w-3xl">
-            Descubre los Dispositivos del Futuro en NovaMarket
+    <div className="space-y-16 py-6 pb-16">
+      
+      {/* HERO BANNER - FIGMA EXACT MATCH */}
+      <section className="bg-slate-100/90 rounded-3xl p-8 sm:p-12 md:p-14 border border-slate-200/60 flex flex-col md:flex-row items-center justify-between gap-10 shadow-xs">
+        <div className="max-w-md lg:max-w-lg space-y-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-[1.15] tracking-tight">
+            Ingeniería de excelencia para tu{" "}
+            <span className="relative inline-block text-blue-600 font-black">
+              vida digital
+              <span className="block h-1 bg-blue-600 rounded-full mt-1 w-full" />
+            </span>
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-            Una colección curada de lo último en hardware, smartphones y accesorios premium, lista para potenciar tu productividad y entretenimiento.
+          <p className="text-slate-600 text-sm md:text-base leading-relaxed font-normal">
+            Descubre la nueva generación de hardware de ingeniería de precisión. El minimalismo se fusiona con el máximo rendimiento en nuestra nueva colección exclusiva.
           </p>
+        </div>
+
+        {/* Laptop Hero Image Exact Match from User Upload */}
+        <div className="w-full md:w-1/2 flex justify-end">
+          <div className="w-full rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-white">
+            <img
+              src="/images/hero-banner.png"
+              alt="Bienvenido a tu Catálogo Digital - Setup NovaMarket"
+              className="w-full h-auto max-h-[380px] object-cover"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Catalog Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        {/* Filters Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/60 pb-6">
+      {/* EXPLORA NUESTROS PRODUCTOS - ULTRA CLEAN HIGH IMPACT BENTO GRID (NO TEXT OVERLAY) */}
+      <section className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Nuestro Catálogo</h2>
-            <p className="text-sm text-muted-foreground mt-1">Explora productos según su categoría</p>
+            <h2 className="text-2xl font-extrabold text-slate-900">Explora Nuestro productos</h2>
+            <p className="text-sm text-slate-500 mt-1">Descubre nuestros productos especializados.</p>
+          </div>
+          <Link href="/products" className="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1">
+            Ver todas las categorías &rarr;
+          </Link>
+        </div>
+
+        {/* Bento Grid con Fotografía de Alto Impacto Limpia */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Card 1: Izquierda Alto (Hardware Futurista de Alto Impacto) */}
+          <div className="relative rounded-2xl overflow-hidden bg-slate-950 min-h-[380px] border border-slate-200/80 shadow-xs group">
+            <img
+              src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=1000&auto=format&fit=crop"
+              alt="Hardware y componentes de alta precisión"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all ${
-                  selectedCategory === category
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-background text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          {/* Columna Derecha (3 Cards) */}
+          <div className="md:col-span-2 space-y-6 flex flex-col justify-between">
+            
+            {/* Fila Superior (2 Cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              
+              {/* Card 2: Audífonos Estudio Minimalista */}
+              <div className="relative rounded-2xl overflow-hidden bg-slate-100 min-h-[180px] border border-slate-200/80 shadow-xs group">
+                <img
+                  src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop"
+                  alt="Auriculares de estudio de alta fidelidad"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
+
+              {/* Card 3: Periféricos y Mouse Ergonómico Clean */}
+              <div className="relative rounded-2xl overflow-hidden bg-slate-100 min-h-[180px] border border-slate-200/80 shadow-xs group">
+                <img
+                  src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop"
+                  alt="Mouse y teclado ergonómico de precisión"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
+
+            </div>
+
+            {/* Card 4: Fila Inferior Ancha (Setup Workspace Dual Monitor Ultra-Clean) */}
+            <div className="relative rounded-2xl overflow-hidden bg-slate-900 min-h-[180px] border border-slate-200/80 shadow-xs group">
+              <img
+                src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?q=80&w=1000&auto=format&fit=crop"
+                alt="Workspace con monitores duales de alta definición"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* TRENDING HARDWARE CAROUSEL/GRID */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-extrabold text-slate-900">Trending Hardware</h2>
+          <div className="flex items-center space-x-2">
+            <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors">
+              &lt;
+            </button>
+            <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors">
+              &gt;
+            </button>
           </div>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-          {filteredProducts.map((product) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {TRENDING_PRODUCTS.map((product) => (
             <div
               key={product.id}
-              className="group flex flex-col bg-background rounded-xl border border-border overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300"
+              className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between space-y-4 relative group"
             >
-              {/* Product Image */}
-              <div className="relative aspect-video bg-muted overflow-hidden">
-                {/* Fallback mock visual representation using CSS gradient when image fails */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-accent/5" />
+              {/* Top Row: Badge & Wishlist Heart */}
+              <div className="flex items-center justify-between relative z-10">
+                <span className="bg-blue-50 text-blue-700 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-xs uppercase border border-blue-100">
+                  BEST SELLER
+                </span>
+                <button
+                  onClick={() => toggleFavorite(product.id)}
+                  className="w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <svg
+                    className={`w-4 h-4 shrink-0 ${favorites[product.id] ? "fill-red-500 text-red-500" : "fill-none"}`}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.683a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Product Thumbnail */}
+              <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center">
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                {product.featured && (
-                  <span className="absolute top-3 left-3 bg-accent text-accent-foreground text-[10px] font-bold px-2 py-1 rounded">
-                    Destacado
-                  </span>
-                )}
-                {product.stock <= 3 && (
-                  <span className="absolute top-3 right-3 bg-destructive text-destructive-foreground text-[10px] font-bold px-2 py-1 rounded">
-                    Últimas unidades ({product.stock})
-                  </span>
-                )}
               </div>
 
-              {/* Product Info */}
-              <div className="p-5 flex flex-col flex-grow">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">
-                  {product.category}
-                </span>
-                <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 flex-grow mb-4">
-                  {product.description}
-                </p>
+              {/* Info */}
+              <div className="space-y-1">
+                <h3 className="font-bold text-slate-900 text-sm">{product.name}</h3>
+                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{product.description}</p>
+              </div>
 
-                {/* Price and Action */}
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/40">
-                  <span className="text-xl font-extrabold text-foreground">
-                    ${product.price.toLocaleString()}
-                  </span>
-                  <button
-                    onClick={() => addItem(product, 1)}
-                    disabled={product.stock === 0}
-                    className={`text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all ${
-                      product.stock === 0
-                        ? "bg-secondary text-muted-foreground cursor-not-allowed border border-border"
-                        : "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm"
-                    }`}
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    {product.stock === 0 ? "Sin Stock" : "Añadir"}
-                  </button>
-                </div>
+              {/* Price & Add to Cart Button */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <span className="font-bold text-blue-600 text-base">${product.price.toFixed(2)}</span>
+                <button
+                  onClick={() => addItem(product)}
+                  className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors shadow-xs font-bold text-base"
+                >
+                  +
+                </button>
               </div>
             </div>
           ))}
         </div>
       </section>
+
+      {/* CTA BANNER - FIGMA EXACT MATCH */}
+      <section className="bg-blue-600 rounded-xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md text-white">
+        <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-center sm:text-left">
+          Regístrate para poder comprar y obtener beneficios.
+        </h2>
+        <Link
+          href="/register"
+          className="bg-white text-slate-900 font-extrabold px-8 py-3 rounded-lg hover:bg-slate-100 transition-colors shadow-xs text-sm shrink-0"
+        >
+          Regístrate
+        </Link>
+      </section>
+
     </div>
   );
 }

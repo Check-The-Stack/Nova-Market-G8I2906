@@ -4,39 +4,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --background: 210 40% 98%; /* #F8FAFC - Fondo suave de Figma */
+    --foreground: 222 47% 11%;  /* #0F172A */
 
-    --primary: 263.4 70% 50.4%; /* Morado premium de acento */
-    --primary-hover: 263.4 70% 42%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 221 100% 50%;     /* #0052FF - Azul Real vibrante de Figma */
+    --primary-hover: 221 100% 42%;/* #0043CC */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 215 16% 47%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 262.1 83.3% 57.8%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 221 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 263.4 70% 50.4%;
+    --border: 214 32% 91%;       /* #E2E8F0 */
+    --input: 214 32% 91%;
+    --ring: 221 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.85rem;
   }
 
   .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
 
-    --primary: 263.4 70% 50.4%;
-    --primary-hover: 263.4 70% 58%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 221 100% 50%;
+    --primary-hover: 221 100% 58%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
@@ -44,15 +44,15 @@
     --muted: 215 27.9% 16.9%;
     --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 263.4 70% 50.4%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 221 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+    --ring: 221 100% 50%;
   }
 }
 
@@ -61,7 +61,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-slate-50 text-slate-900 antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  svg {
+    display: inline-block;
+    max-width: 100%;
+    max-height: 100%;
   }
 }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import Link from "next/link";
+import api from "../../services/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -31,10 +32,22 @@ export default function RegisterPage() {
 
     setIsLoading(true);
 
+    try {
+      // Intentar registro real en el backend
+      const response = await api.post("/auth/register", { name, email, password });
+      if (response.data?.success && response.data?.token) {
+        login(response.data.token, response.data.user);
+        router.push("/");
+        return;
+      }
+    } catch (err: any) {
+      console.log("Backend offline or local demo mode");
+    }
+
     setTimeout(() => {
       setIsLoading(false);
       const mockUser = {
-        id: "customer-id-" + Math.random().toString(36).substr(2, 9),
+        id: "customer-id-" + Math.random().toString(36).substring(2, 9),
         name: name,
         email: email.trim().toLowerCase(),
         role: "customer" as "customer" | "admin",
@@ -42,116 +55,117 @@ export default function RegisterPage() {
 
       login("mock-jwt-token-value", mockUser);
       router.push("/");
-    }, 800);
+    }, 600);
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-background border border-border p-8 rounded-2xl shadow-sm">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
-            Crea tu cuenta
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            ¿Ya tienes una cuenta?{" "}
-            <Link href="/login" className="font-semibold text-primary hover:text-primary-hover transition-colors">
-              Inicia sesión
-            </Link>
-          </p>
-        </div>
+    <div className="-mx-4 sm:-mx-6 lg:-mx-8 -my-6 sm:-my-10 flex min-h-[calc(100vh-4rem)]">
+      
+      {/* Left Column: Workspace Image Overlay */}
+      <div className="hidden lg:block lg:w-1/2 relative bg-slate-900 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+          alt="Workspace"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 to-blue-950/50" />
+      </div>
 
-        {error && (
-          <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm px-4 py-3 rounded-lg flex items-center gap-2">
-            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span>{error}</span>
+      {/* Right Column: Register Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-slate-50/50">
+        <div className="max-w-md w-full bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-6">
+          
+          <div className="text-center space-y-1">
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              Crea tu cuenta
+            </h2>
+            <p className="text-xs text-slate-500 font-medium">Únete a NovaMarket</p>
           </div>
-        )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-2 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Nombre completo
               </label>
               <input
-                id="name"
-                name="name"
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Juan Pérez"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white"
               />
             </div>
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Correo electrónico
               </label>
               <input
-                id="email"
-                name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ejemplo@correo.com"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                placeholder="nombre@empresa.com"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white"
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Contraseña
               </label>
               <input
-                id="password"
-                name="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                placeholder="........"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white"
               />
             </div>
+
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Confirmar contraseña
               </label>
               <input
-                id="confirmPassword"
-                name="confirmPassword"
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                placeholder="........"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white"
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-sm disabled:opacity-75"
+              className="w-full bg-primary hover:bg-primary-hover text-white text-xs font-extrabold py-3 rounded-lg transition-colors shadow-sm disabled:opacity-75"
             >
-              {isLoading ? (
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                "Registrarse"
-              )}
+              {isLoading ? "Cargando..." : "Registrarse"}
             </button>
+          </form>
+
+          <div className="text-center pt-2 border-t border-slate-100">
+            <p className="text-xs text-slate-500">
+              ¿Ya tienes una cuenta?{" "}
+              <Link href="/login" className="font-bold text-primary hover:underline">
+                Inicia sesión
+              </Link>
+            </p>
           </div>
-        </form>
+
+        </div>
       </div>
+
     </div>
   );
 }
