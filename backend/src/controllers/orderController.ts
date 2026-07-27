@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { prisma } from '../config/prisma.js';
+import { Prisma } from '@prisma/client';
 import { AuthRequest } from '../middleware/authMiddleware.js';
 
 interface OrderItemInput {
@@ -48,7 +49,7 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    const order = await prisma.$transaction(async (tx) => {
+    const order = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       for (const item of orderItemsData) {
         await tx.product.update({
           where: { id: item.productId },

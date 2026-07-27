@@ -21,7 +21,6 @@
     "dotenv": "^16.6.1",
     "express": "^4.22.2",
     "jsonwebtoken": "^9.0.3",
-    "nova-market": "file:..",
     "zod": "^3.23.0"
   },
   "devDependencies": {
