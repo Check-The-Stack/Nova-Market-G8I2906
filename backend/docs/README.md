@@ -20,6 +20,9 @@ Aquí encontrarás las especificaciones de arquitectura, endpoints, requerimient
 4. [04 - Integración de Supabase con Prisma ORM](file:///c:/Users/vikdu/OneDrive/Escritorio/Nova-Market-G8I2906/backend/docs/04-integracion-supabase-prisma.md)  
    Guía de configuración del cliente de Prisma, cliente de Supabase SDK, gestión de Connection Pooling (PgBouncer) vs Conexiones Directas para migraciones, variables de entorno y solución de problemas.
 
+5. [05 - Guía de Integración API - Panel de Administración](file:///c:/Users/vikdu/OneDrive/Escritorio/Nova-Market-G8I2906/backend/docs/05-integracion-admin-api.md)  
+   Instrucciones para el desarrollador frontend para conectar la pantalla de gestión de productos con el backend.
+
 ---
 
 ## 🛠️ Stack del Backend
