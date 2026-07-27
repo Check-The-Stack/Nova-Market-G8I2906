@@ -32,16 +32,26 @@ export default function RegisterPage() {
 
     setIsLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       // Intentar registro real en el backend
-      const response = await api.post("/auth/register", { name, email, password });
-      if (response.data?.success && response.data?.token) {
-        login(response.data.token, response.data.user);
+      const response = await api.post("/auth/register", { name, email: cleanEmail, password });
+      const token = response.data?.token || response.data?.data?.token;
+      const user = response.data?.user || response.data?.data?.user;
+
+      if (response.data?.success && token && user) {
+        login(token, user);
         router.push("/");
         return;
       }
     } catch (err: any) {
-      console.log("Backend offline or local demo mode");
+      console.log("Backend register error:", err);
+      if (err.response) {
+        setIsLoading(false);
+        setError(err.response.data?.error || "Error al registrar usuario.");
+        return;
+      }
     }
 
     setTimeout(() => {

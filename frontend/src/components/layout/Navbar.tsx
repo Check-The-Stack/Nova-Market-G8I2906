@@ -51,9 +51,6 @@ export const Navbar: React.FC = () => {
 
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
-                  {user?.name}
-                </span>
                 {user?.role === "admin" && (
                   <Link href="/admin" className="text-xs text-blue-600 hover:underline font-semibold">
                     Admin
@@ -138,9 +135,16 @@ export const Navbar: React.FC = () => {
             Nosotros
           </Link>
           {isAuthenticated ? (
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">{user?.name}</span>
-              <button onClick={logout} className="text-xs text-red-600 font-semibold">Cerrar sesión</button>
+            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-slate-700">{user?.name}</span>
+                <button onClick={logout} className="text-xs text-red-600 font-semibold">Cerrar sesión</button>
+              </div>
+              {user?.role === "admin" && (
+                <Link href="/admin" onClick={() => setIsOpen(false)} className="text-xs text-blue-600 hover:underline font-semibold self-start">
+                  Admin
+                </Link>
+              )}
             </div>
           ) : (
             <Link href="/login" onClick={() => setIsOpen(false)} className="block text-sm font-medium text-blue-600 py-1.5">

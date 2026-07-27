@@ -27,16 +27,26 @@ export default function LoginPage() {
 
     setIsLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       // Intentar login real con la API del Backend
-      const response = await api.post("/auth/login", { email, password });
-      if (response.data?.success && response.data?.token) {
-        login(response.data.token, response.data.user);
+      const response = await api.post("/auth/login", { email: cleanEmail, password });
+      const token = response.data?.token || response.data?.data?.token;
+      const user = response.data?.user || response.data?.data?.user;
+      
+      if (response.data?.success && token && user) {
+        login(token, user);
         router.push("/");
         return;
       }
     } catch (err: any) {
-      console.log("Backend auth API fallback to demo mode:", err);
+      console.log("Backend auth API error:", err);
+      if (err.response) {
+        setIsLoading(false);
+        setError(err.response.data?.error || "Credenciales inválidas.");
+        return;
+      }
     }
 
     // Fallback demo login
