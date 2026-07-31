@@ -124,3 +124,40 @@ export const getAllOrders = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ success: false, error: error.message || 'Error al obtener órdenes' });
   }
 };
+
+export const getOrderById = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user?.id;
+    const userRole = req.user?.role;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true }
+        },
+        items: {
+          include: { product: true }
+        }
+      }
+    });
+
+    if (!order) {
+      return res.status(404).json({ success: false, error: 'Pedido no encontrado' });
+    }
+
+    // Seguridad: Un cliente normal solo puede ver sus propios pedidos. Los admins pueden ver cualquiera.
+    if (userRole !== 'admin' && order.userId !== userId) {
+      return res.status(403).json({ success: false, error: 'Acceso denegado: no autorizado para ver este pedido' });
+    }
+
+    return res.json({ success: true, data: order });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message || 'Error al obtener el pedido' });
+  }
+};
