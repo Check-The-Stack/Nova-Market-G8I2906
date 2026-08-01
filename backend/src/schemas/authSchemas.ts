@@ -21,3 +21,19 @@ export const loginSchema = z.object({
     required_error: 'La contraseña es obligatoria',
   }).min(1, 'La contraseña es obligatoria'),
 });
+
+export const forgotPasswordSchema = z.object({
+  email: z.string({
+    required_error: 'El email es obligatorio',
+  }).email('El formato del email no es válido'),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string({
+    required_error: 'El token es obligatorio',
+  }).min(1, 'El token es obligatorio'),
+  password: z.string({
+    required_error: 'La contraseña es obligatoria',
+  }).min(6, 'La contraseña debe tener al menos 6 caracteres'),
+});
+
