@@ -26,6 +26,10 @@ app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'NovaMarket API running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
