@@ -161,3 +161,86 @@ export const getOrderById = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ success: false, error: error.message || 'Error al obtener el pedido' });
   }
 };
+
+export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['pending', 'paid', 'shipped', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, error: `Estado no válido. Valores permitidos: ${validStatuses.join(', ')}` });
+    }
+
+    const order = await prisma.order.findUnique({ where: { id } });
+    if (!order) {
+      return res.status(404).json({ success: false, error: 'Pedido no encontrado' });
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: { status },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true }
+        },
+        items: {
+          include: { product: true }
+        }
+      }
+    });
+
+    return res.json({ success: true, data: updatedOrder });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message || 'Error al actualizar el estado del pedido' });
+  }
+};
+
+export const getAdminStats = async (req: AuthRequest, res: Response) => {
+  try {
+    const [totalUsers, totalProducts, totalOrders, ordersGrouped, latestOrders] = await Promise.all([
+      prisma.user.count(),
+      prisma.product.count(),
+      prisma.order.count(),
+      prisma.order.groupBy({
+        by: ['status'],
+        _count: {
+          id: true,
+        },
+        _sum: {
+          total: true,
+        }
+      }),
+      prisma.order.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true }
+          }
+        }
+      })
+    ]);
+
+    const totalRevenue = ordersGrouped.reduce((acc, curr) => acc + (curr._sum.total || 0), 0);
+
+    const statusBreakdown = ordersGrouped.reduce((acc: any, curr) => {
+      acc[curr.status] = curr._count.id;
+      return acc;
+    }, {});
+
+    return res.json({
+      success: true,
+      data: {
+        totalUsers,
+        totalProducts,
+        totalOrders,
+        totalRevenue,
+        statusBreakdown,
+        latestOrders,
+      }
+    });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message || 'Error al obtener estadísticas del administrador' });
+  }
+};
