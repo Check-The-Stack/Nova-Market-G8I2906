@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -8,7 +8,7 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());

@@ -11,6 +11,11 @@ interface CartContextType {
   clearCart: () => void;
   cartTotal: number;
   cartItemsCount: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (isOpen: boolean) => void;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,6 +23,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
   // Cargar carrito desde localStorage al iniciar
   useEffect(() => {
@@ -39,6 +45,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [cartItems, isInitialized]);
 
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+  const toggleCart = () => setIsCartOpen((prev) => !prev);
+
   const addItem = (product: Product, quantity: number = 1) => {
     setCartItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex((item) => item.product.id === product.id);
@@ -46,13 +56,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (existingItemIndex > -1) {
         const newItems = [...prevItems];
         const newQuantity = newItems[existingItemIndex].quantity + quantity;
-        // Limitar la cantidad al stock disponible si corresponde
-        newItems[existingItemIndex].quantity = Math.min(newQuantity, product.stock);
+        newItems[existingItemIndex].quantity = Math.min(newQuantity, product.stock || 99);
         return newItems;
       } else {
-        return [...prevItems, { product, quantity: Math.min(quantity, product.stock) }];
+        return [...prevItems, { product, quantity: Math.min(quantity, product.stock || 99) }];
       }
     });
+
+    // Abrir automáticamente el Drawer al agregar un ítem
+    setIsCartOpen(true);
   };
 
   const removeItem = (productId: string) => {
@@ -68,7 +80,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.product.id === productId
-          ? { ...item, quantity: Math.min(quantity, item.product.stock) }
+          ? { ...item, quantity: Math.min(quantity, item.product.stock || 99) }
           : item
       )
     );
@@ -95,6 +107,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearCart,
         cartTotal,
         cartItemsCount,
+        isCartOpen,
+        setIsCartOpen,
+        openCart,
+        closeCart,
+        toggleCart,
       }}
     >
       {children}

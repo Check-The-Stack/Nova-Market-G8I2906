@@ -1,6 +1,6 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 
-export const prismaMock = {
+const prismaMock = {
   user: {
     findUnique: jest.fn<any>(),
   },

@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "../types";
-import api from "../services/api";
 
 interface AuthContextType {
   user: User | null;
@@ -10,6 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (token: string, userData: User) => void;
+  loginWithGoogle: () => void;
   logout: () => void;
   updateUser: (userData: User) => void;
 }
@@ -46,6 +46,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(userData);
   };
 
+  const loginWithGoogle = () => {
+    const googleUser: User = {
+      id: "google-usr-demo",
+      name: "Alex Rivera (Google)",
+      email: "alex.rivera.google@gmail.com",
+      role: "customer",
+    };
+    const mockToken = "google-demo-token-" + Date.now();
+    login(mockToken, googleUser);
+  };
+
   const logout = () => {
     localStorage.removeItem("novamarket_token");
     localStorage.removeItem("novamarket_user");
@@ -66,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         isLoading,
         login,
+        loginWithGoogle,
         logout,
         updateUser,
       }}
