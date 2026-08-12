@@ -3,7 +3,7 @@ import { prisma } from '../config/prisma.js';
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const { category, search, featured } = req.query;
+    const { category, search, featured, page, limit } = req.query;
 
     const where: any = {};
 
@@ -22,12 +22,44 @@ export const getProducts = async (req: Request, res: Response) => {
       ];
     }
 
-    const products = await prisma.product.findMany({
-      where,
-      orderBy: { createdAt: 'desc' }
-    });
+    // Paginación opcional
+    let products;
+    let paginationInfo;
 
-    return res.json({ success: true, data: products });
+    if (page || limit) {
+      const pageNum = Math.max(1, Number(page) || 1);
+      const limitNum = Math.max(1, Number(limit) || 10);
+      const skip = (pageNum - 1) * limitNum;
+
+      const [total, items] = await Promise.all([
+        prisma.product.count({ where }),
+        prisma.product.findMany({
+          where,
+          skip,
+          take: limitNum,
+          orderBy: { createdAt: 'desc' }
+        })
+      ]);
+
+      products = items;
+      paginationInfo = {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum)
+      };
+    } else {
+      products = await prisma.product.findMany({
+        where,
+        orderBy: { createdAt: 'desc' }
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: products,
+      ...(paginationInfo && { pagination: paginationInfo })
+    });
   } catch (error: any) {
     return res.status(500).json({ success: false, error: error.message || 'Error al obtener productos' });
   }

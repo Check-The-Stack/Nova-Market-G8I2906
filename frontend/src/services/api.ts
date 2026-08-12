@@ -25,13 +25,16 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor de respuesta para manejar errores globales (como desloguear si hay 401)
+// Interceptor de respuesta para manejar errores globales (como desloguear si hay 401 o 403)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    const isAuthRequest = error.config?.url?.includes("/auth/login") || error.config?.url?.includes("/auth/register");
+    if (error.response && (error.response.status === 401 || error.response.status === 403) && !isAuthRequest) {
       if (typeof window !== "undefined") {
         localStorage.removeItem("novamarket_token");
+        localStorage.removeItem("novamarket_user");
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

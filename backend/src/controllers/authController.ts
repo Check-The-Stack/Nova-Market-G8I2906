@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { prisma } from '../config/prisma.js';
 
 export const register = async (req: Request, res: Response) => {
@@ -100,5 +101,95 @@ export const getMe = async (req: any, res: Response) => {
     return res.json({ success: true, data: user });
   } catch (error: any) {
     return res.status(500).json({ success: false, error: error.message || 'Error al obtener perfil' });
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Por seguridad, respondemos con éxito para no revelar qué correos existen en el sistema.
+      // Pero no generamos ningún token.
+      return res.json({
+        success: true,
+        message: 'Si el correo electrónico está registrado, recibirás un enlace de restablecimiento pronto.'
+      });
+    }
+
+    // Generar token y expiración (1 hora)
+    const token = crypto.randomBytes(20).toString('hex');
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 1);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordToken: token,
+        resetPasswordExpires: expires
+      }
+    });
+
+    // En un entorno productivo enviaríamos un correo electrónico aquí.
+    // Para propósitos de este MVP y testing, lo imprimimos en consola y lo retornamos.
+    console.log(`[RECOVER] Token de restablecimiento para ${email}: ${token}`);
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    console.log(`[RECOVER] Enlace: ${resetLink}`);
+
+    return res.json({
+      success: true,
+      message: 'Si el correo electrónico está registrado, recibirás un enlace de restablecimiento pronto.',
+      // Se expone el token en desarrollo/test para facilidad de pruebas
+      debug: {
+        token,
+        resetLink
+      }
+    });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message || 'Error en solicitud de recuperación' });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, password } = req.body;
+
+    // Buscar el usuario por token y validar que no haya expirado
+    const user = await prisma.user.findFirst({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpires: {
+          gt: new Date()
+        }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        error: 'El token de restablecimiento es inválido o ha expirado.'
+      });
+    }
+
+    // Hashear nueva contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Actualizar contraseña y limpiar campos de token
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+        resetPasswordExpires: null
+      }
+    });
+
+    return res.json({
+      success: true,
+      message: 'Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión.'
+    });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message || 'Error al restablecer contraseña' });
   }
 };
