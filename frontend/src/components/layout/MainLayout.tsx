@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 import { AuthProvider } from "../../context/AuthContext";
 import { CartProvider } from "../../context/CartContext";
 import { FavoritesProvider } from "../../context/FavoritesContext";
@@ -14,6 +15,9 @@ interface MainLayoutProps {
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith("/admin");
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -21,9 +25,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20">
             <Navbar />
             <main className="flex-grow flex flex-col">{children}</main>
-            <Footer />
-            <SupportBubble />
-            <CookieBanner />
+            {!isAdminPage && <Footer />}
+            {!isAdminPage && <SupportBubble />}
+            {!isAdminPage && <CookieBanner />}
           </div>
         </FavoritesProvider>
       </CartProvider>
