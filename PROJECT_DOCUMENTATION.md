@@ -99,3 +99,35 @@
   * `PORT` (`4000`)
 * `frontend/.env.local`:
   * `NEXT_PUBLIC_API_URL` (`http://localhost:4000/api`)
+
+---
+
+## ⚙️ Estado de Implementación del Backend (API)
+
+**1. Gestión de Usuarios y Autenticación**
+- [x] Login y roles de usuario (`POST /api/auth/login`)
+- [x] Registro y recuperación de contraseña (`POST /api/auth/register`, etc)
+- [x] Obtener perfil propio (`GET /api/auth/me`)
+- [ ] Edición de perfil de usuario (Pendiente)
+- [ ] CRUD de clientes para el Admin (Pendiente)
+
+**2. Productos y Categorías**
+- [x] Listar y buscar productos (`GET /api/products`)
+- [x] Detalle de producto (`GET /api/products/:id`)
+- [x] CRUD de Productos para Admin (`POST`, `PUT`, `DELETE /api/products`)
+- [x] Listar categorías (`GET /api/categories`)
+- [ ] CRUD de Categorías para Admin (Pendiente)
+
+**3. Pedidos y Carrito**
+- [x] CRUD de Carrito de compras (`/api/cart`)
+- [x] Crear pedido (`POST /api/orders`)
+- [x] Historial de pedidos de usuario (`GET /api/orders/my-orders` y `GET /api/orders/:id`)
+- [x] Listar pedidos para Admin (`GET /api/admin/orders`)
+- [x] Actualizar estado de pedido (`PUT /api/admin/orders/:id/status`)
+- [ ] Sistema de Tracking en vivo por código (Pendiente)
+
+**4. Cupones y Dashboard**
+- [x] Estadísticas generales del Dashboard (`GET /api/admin/stats`)
+- [ ] Validar cupones en carrito (Pendiente)
+- [ ] CRUD de Cupones para Admin (Pendiente)
+- [ ] Configuración global de la tienda (Pendiente)
