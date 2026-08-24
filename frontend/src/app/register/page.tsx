@@ -13,8 +13,15 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const isFormValid =
+    name.trim().length > 0 &&
+    email.trim().length > 0 &&
+    password.length > 0 &&
+    confirmPassword.length > 0;
 
   const handleGoogleLogin = () => {
     loginWithGoogle();
@@ -30,15 +37,25 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Por favor ingresa un correo electrónico válido.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden.");
       return;
     }
 
-    setIsLoading(true);
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
 
+    setIsLoading(true);
     const cleanEmail = email.trim().toLowerCase();
 
+    // 1. Intentar registrar en Backend
     try {
       const response = await api.post("/auth/register", { name, email: cleanEmail, password });
       const token = response.data?.token || response.data?.data?.token;
@@ -50,33 +67,46 @@ export default function RegisterPage() {
         return;
       }
     } catch (err: any) {
-      console.log("Backend register error:", err);
-      if (err.response) {
+      if (err.response && err.response.data?.error) {
         setIsLoading(false);
-        setError(err.response.data?.error || "Error al registrar usuario.");
+        setError(err.response.data.error);
         return;
       }
     }
 
+    // 2. Persistir localmente para fallback
     setTimeout(() => {
       setIsLoading(false);
+      const newUserId = "customer-" + Date.now();
       const mockUser = {
-        id: "customer-id-" + Math.random().toString(36).substring(2, 9),
-        name: name,
-        email: email.trim().toLowerCase(),
+        id: newUserId,
+        name: name.trim(),
+        email: cleanEmail,
         role: "customer" as "customer" | "admin",
       };
 
-      login("mock-jwt-token-value", mockUser);
+      try {
+        const storedUsers = JSON.parse(localStorage.getItem("novamarket_registered_users") || "{}");
+        storedUsers[cleanEmail] = {
+          id: newUserId,
+          name: name.trim(),
+          email: cleanEmail,
+          password: password,
+          role: "customer",
+        };
+        localStorage.setItem("novamarket_registered_users", JSON.stringify(storedUsers));
+      } catch (e) {}
+
+      login("mock-jwt-token-" + Date.now(), mockUser);
       router.push("/");
-    }, 600);
+    }, 400);
   };
 
   return (
     <div className="-mx-4 sm:-mx-6 lg:-mx-8 -my-6 sm:-my-10 flex min-h-[calc(100vh-4rem)]">
       
       {/* Left Column: Workspace Image Overlay */}
-      <div className="hidden lg:block lg:w-1/2 relative bg-slate-900 overflow-hidden">
+      <div className="hidden lg:block lg:w-1/2 relative bg-slate-900 overflow-hidden min-h-[550px]">
         <img
           src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
           alt="Workspace"
@@ -101,7 +131,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-xl text-xs font-extrabold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs hover:shadow-xs active:scale-98"
+              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-xl text-xs font-extrabold text-slate-700 hover:bg-slate-50 transition-all shadow-2xs hover:shadow-xs active:scale-98 cursor-pointer"
             >
               <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -114,14 +144,15 @@ export default function RegisterPage() {
 
             <div className="relative flex py-1 items-center">
               <div className="flex-grow border-t border-slate-200" />
-              <span className="shrink mx-3 text-[11px] font-bold text-slate-400 uppercase">o crea tu contraseña</span>
+              <span className="shrink mx-3 text-[11px] font-bold text-slate-400 uppercase">o con tu contraseña</span>
               <div className="flex-grow border-t border-slate-200" />
             </div>
           </div>
 
           {error && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-600 text-xs px-3 py-2 rounded-xl">
-              {error}
+            <div className="bg-rose-50 border border-rose-200 text-rose-600 text-xs px-3 py-2.5 rounded-xl font-medium flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{error}</span>
             </div>
           )}
 
@@ -136,7 +167,7 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Juan Pérez"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
               />
             </div>
 
@@ -150,7 +181,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nombre@empresa.com"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
               />
             </div>
 
@@ -158,14 +189,24 @@ export default function RegisterPage() {
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Contraseña
               </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mínimo 6 caracteres"
+                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-700 text-sm cursor-pointer"
+                  title={showPassword ? "Ocultar" : "Mostrar"}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             <div>
@@ -173,21 +214,25 @@ export default function RegisterPage() {
                 Confirmar contraseña
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white"
+                placeholder="Repite tu contraseña"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-mono"
               />
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold py-3 rounded-xl transition-all shadow-md shadow-blue-500/20 disabled:opacity-75"
+              disabled={isLoading || !isFormValid}
+              className={`w-full text-xs font-extrabold py-3.5 rounded-xl transition-all shadow-md ${
+                isFormValid && !isLoading
+                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20 active:scale-98 cursor-pointer"
+                  : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+              }`}
             >
-              {isLoading ? "Creando cuenta..." : "Registrarse"}
+              {isLoading ? "Creando cuenta..." : "Crear mi cuenta"}
             </button>
           </form>
 

@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (token: string, userData: User) => void;
-  loginWithGoogle: () => void;
+  loginWithGoogle: (email?: string, name?: string) => void;
   logout: () => void;
   updateUser: (userData: User) => void;
 }
@@ -46,14 +46,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(userData);
   };
 
-  const loginWithGoogle = () => {
+  const loginWithGoogle = (email?: string, name?: string) => {
+    const finalEmail = email || "usuario.google@gmail.com";
+    const finalName = name || (finalEmail.split("@")[0].replace(".", " ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()));
+    
     const googleUser: User = {
-      id: "google-usr-demo",
-      name: "Alex Rivera (Google)",
-      email: "alex.rivera.google@gmail.com",
+      id: "google-usr-" + Date.now(),
+      name: finalName,
+      email: finalEmail,
       role: "customer",
     };
-    const mockToken = "google-demo-token-" + Date.now();
+    const mockToken = "google-token-" + Date.now();
     login(mockToken, googleUser);
   };
 

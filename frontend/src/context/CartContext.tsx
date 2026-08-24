@@ -63,7 +63,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
-    // Abrir automáticamente el Drawer al agregar un ítem
     setIsCartOpen(true);
   };
 
@@ -72,8 +71,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(productId);
+    // Si la cantidad es menor a 1, no eliminar automáticamente, sino bloquear en 1 (BUG-22 / TC-037)
+    if (quantity < 1) {
       return;
     }
 

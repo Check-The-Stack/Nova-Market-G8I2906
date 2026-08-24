@@ -8,6 +8,7 @@ export default function CartPage() {
   const { cartItems, removeItem, updateQuantity, cartTotal, clearCart } = useCart();
   const [promoCode, setPromoCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
+  const [promoSuccess, setPromoSuccess] = useState<string>("");
   const [promoError, setPromoError] = useState<string>("");
 
   const FREE_SHIPPING_THRESHOLD = 150;
@@ -17,19 +18,27 @@ export default function CartPage() {
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
     setPromoError("");
-    if (promoCode.trim().toUpperCase() === "NOVA10") {
+    setPromoSuccess("");
+
+    const code = promoCode.trim().toUpperCase();
+
+    if (code === "DESCUENTO10" || code === "NOVA10") {
       setAppliedDiscount(0.10); // 10% OFF
-    } else if (promoCode.trim().toUpperCase() === "NOVA20") {
+      setPromoSuccess(`¡Cupón "${code}" aplicado con éxito! (10% de descuento)`);
+    } else if (code === "NOVA20" || code === "DESCUENTO20") {
       setAppliedDiscount(0.20); // 20% OFF
+      setPromoSuccess(`¡Cupón "${code}" aplicado con éxito! (20% de descuento)`);
     } else {
-      setPromoError("Código promocional inválido (Prueba NOVA10)");
+      setAppliedDiscount(0);
+      setPromoError("Código promocional inválido o expirado. (Prueba con DESCUENTO10 o NOVA10)");
     }
   };
 
   const discountAmount = cartTotal * appliedDiscount;
-  const estimatedTax = (cartTotal - discountAmount) * 0.08;
-  const shippingCost = remainingForFreeShipping === 0 ? 0 : 15.0;
-  const grandTotal = cartTotal - discountAmount + estimatedTax + shippingCost;
+  const taxableBase = cartTotal - discountAmount;
+  const estimatedTax = taxableBase * 0.08;
+  const shippingCost = cartTotal === 0 || remainingForFreeShipping === 0 ? 0 : 15.0;
+  const grandTotal = taxableBase + estimatedTax + shippingCost;
 
   if (cartItems.length === 0) {
     return (
@@ -44,26 +53,26 @@ export default function CartPage() {
           Explora nuestro catálogo para encontrar laptops, celulares, periféricos y la última tecnología.
         </p>
         <Link href="/products" className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-8 py-3 rounded-xl shadow-md transition-all">
-          Explorar Catálogo
+          Ir a Productos
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-8">
+    <div className="space-y-8 py-6 pb-16">
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">Mi Carrito de Compras</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Tienes {cartItems.reduce((acc, i) => acc + i.quantity, 0)} artículos en tu bolsa.
+            Tienes {cartItems.reduce((acc, i) => acc + i.quantity, 0)} {cartItems.reduce((acc, i) => acc + i.quantity, 0) === 1 ? "artículo" : "artículos"} en tu bolsa.
           </p>
         </div>
         <button
           onClick={clearCart}
-          className="text-xs font-semibold text-rose-600 hover:underline"
+          className="text-xs font-semibold text-rose-600 hover:underline cursor-pointer"
         >
           Vaciar carrito
         </button>
@@ -98,7 +107,7 @@ export default function CartPage() {
               key={product.id}
               className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start justify-between gap-4 shadow-2xs hover:shadow-md transition-all relative"
             >
-              {/* Image & Text Info */}
+              {/* Image & Text Info (TC-034: imagen, nombre, categoría/variante/color y precio) */}
               <div className="flex items-start gap-4">
                 <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 p-1 shrink-0 flex items-center justify-center">
                   <img
@@ -108,31 +117,57 @@ export default function CartPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wide bg-blue-50 px-2 py-0.5 rounded-full">
-                    {product.category}
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wide bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                      {product.category}
+                    </span>
+                    {product.brand && (
+                      <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                        {product.brand}
+                      </span>
+                    )}
+                    {product.color && (
+                      <span className="text-[10px] font-medium text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
+                        Color: {product.color}
+                      </span>
+                    )}
+                  </div>
+
                   <Link href={`/products/${product.id}`} className="hover:text-blue-600 transition-colors block">
                     <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-1">{product.name}</h3>
                   </Link>
                   <p className="text-xs text-slate-500 font-semibold">${product.price.toLocaleString("es-AR")} c/u</p>
                   
-                  {/* Quantity selector */}
-                  <div className="pt-2 flex items-center">
+                  {/* Quantity selector (BUG-22 / TC-037: disables '-' when quantity is 1) */}
+                  <div className="pt-2 flex items-center gap-3">
                     <div className="flex items-center bg-slate-100 rounded-xl border border-slate-200 text-slate-800 text-xs font-bold overflow-hidden">
                       <button
                         onClick={() => updateQuantity(product.id, quantity - 1)}
-                        className="px-3 py-1.5 hover:bg-slate-200 transition-colors"
+                        disabled={quantity <= 1}
+                        className={`px-3 py-1.5 transition-colors ${
+                          quantity <= 1 ? "opacity-40 cursor-not-allowed bg-slate-100 text-slate-400" : "hover:bg-slate-200 cursor-pointer"
+                        }`}
+                        title={quantity <= 1 ? "Mínimo 1 producto (usa el basurero para eliminar)" : "Disminuir cantidad"}
                       >
                         –
                       </button>
-                      <span className="px-3 py-1.5">{quantity}</span>
+                      <span className="px-3.5 py-1.5">{quantity}</span>
                       <button
                         onClick={() => updateQuantity(product.id, quantity + 1)}
-                        className="px-3 py-1.5 hover:bg-slate-200 transition-colors"
+                        className="px-3 py-1.5 hover:bg-slate-200 transition-colors cursor-pointer"
+                        title="Incrementar cantidad"
                       >
                         +
                       </button>
                     </div>
+
+                    <button
+                      onClick={() => removeItem(product.id)}
+                      className="text-xs text-rose-500 hover:text-rose-700 flex items-center gap-1 font-semibold cursor-pointer"
+                      title="Eliminar producto de la bolsa"
+                    >
+                      <span>Eliminar</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -144,7 +179,7 @@ export default function CartPage() {
                 </span>
                 <button
                   onClick={() => removeItem(product.id)}
-                  className="text-slate-400 hover:text-rose-600 transition-colors p-1"
+                  className="text-slate-400 hover:text-rose-600 transition-colors p-1 cursor-pointer"
                   title="Eliminar producto"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -171,7 +206,7 @@ export default function CartPage() {
         <div className="lg:col-span-4 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs space-y-6">
           <h2 className="text-lg font-extrabold text-slate-900">Resumen de Compra</h2>
 
-          {/* Promo Code Input */}
+          {/* Promo Code Input (BUG-02 / TC-039 / TC-040) */}
           <form onSubmit={handleApplyPromo} className="space-y-2">
             <label className="text-xs font-bold text-slate-700">¿Tienes un cupón de descuento?</label>
             <div className="flex gap-2">
@@ -179,26 +214,36 @@ export default function CartPage() {
                 type="text"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value)}
-                placeholder="Ej: NOVA10"
+                placeholder="Ej: DESCUENTO10 o NOVA10"
                 className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs uppercase font-bold focus:outline-none focus:border-blue-500"
               />
               <button
                 type="submit"
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors shrink-0"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors shrink-0 cursor-pointer"
               >
                 Aplicar
               </button>
             </div>
-            {promoError && <p className="text-[11px] text-rose-500 font-semibold">{promoError}</p>}
-            {appliedDiscount > 0 && (
-              <p className="text-[11px] text-emerald-600 font-bold">¡Descuento del {appliedDiscount * 100}% aplicado!</p>
+            
+            {promoSuccess && (
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5">
+                <span>✓</span>
+                <span>{promoSuccess}</span>
+              </div>
+            )}
+            
+            {promoError && (
+              <div className="bg-rose-50 border border-rose-200 text-rose-600 text-xs px-3 py-2 rounded-xl font-medium flex items-center gap-1.5">
+                <span>⚠️</span>
+                <span>{promoError}</span>
+              </div>
             )}
           </form>
 
-          {/* Price Breakdown */}
+          {/* Price Breakdown (BUG-10 / BUG-26 / TC-041) */}
           <div className="space-y-3 text-xs text-slate-600 pt-4 border-t border-slate-100">
             <div className="flex justify-between">
-              <span>Subtotal</span>
+              <span>Subtotal ({cartItems.reduce((acc, i) => acc + i.quantity, 0)} productos)</span>
               <span className="font-bold text-slate-900">${cartTotal.toLocaleString("es-AR")}</span>
             </div>
             {appliedDiscount > 0 && (

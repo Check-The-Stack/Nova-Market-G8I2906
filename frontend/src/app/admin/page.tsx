@@ -13,7 +13,13 @@ const DEMO_CATALOG: Product[] = [
     slug: "macbook-pro-16-m3-max",
     description: "Chip M3 Max de Apple con CPU de 16 núcleos, GPU de 40 núcleos, 36GB RAM, 1TB SSD",
     price: 3499.0,
+    originalPrice: 3899.0,
+    onSale: false,
+    badge: "PREMIUM",
     category: "Laptops",
+    brand: "Apple",
+    model: "MacBook Pro 16",
+    color: "Gris Espacial",
     imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop",
     stock: 8,
     featured: true,
@@ -24,7 +30,13 @@ const DEMO_CATALOG: Product[] = [
     slug: "iphone-15-pro-max",
     description: "Pantalla Super Retina XDR de 6.7 pulgadas, Chip A17 Pro, Cámara de 48 MP",
     price: 1299.0,
+    originalPrice: 1449.0,
+    onSale: true,
+    badge: "SALE",
     category: "Celulares",
+    brand: "Apple",
+    model: "iPhone 15 Pro Max",
+    color: "Titanio Natural",
     imageUrl: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=800&auto=format&fit=crop",
     stock: 15,
     featured: true,
@@ -35,7 +47,13 @@ const DEMO_CATALOG: Product[] = [
     slug: "monitor-lg-ultragear-34",
     description: "Pantalla OLED curva QHD, tiempo de respuesta de 0.03ms, G-Sync compatible",
     price: 999.0,
+    originalPrice: 1199.0,
+    onSale: true,
+    badge: "SALE",
     category: "Monitores",
+    brand: "LG",
+    model: "UltraGear 34",
+    color: "Negro",
     imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800&auto=format&fit=crop",
     stock: 3,
     featured: true,
@@ -46,7 +64,13 @@ const DEMO_CATALOG: Product[] = [
     slug: "sony-wh-1000xm5",
     description: "Auriculares inalámbricos con cancelación de ruido líder en el mercado",
     price: 399.0,
+    originalPrice: 449.0,
+    onSale: true,
+    badge: "SALE",
     category: "Audio",
+    brand: "Sony",
+    model: "WH-1000XM5",
+    color: "Negro",
     imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
     stock: 12,
     featured: true,
@@ -57,7 +81,13 @@ const DEMO_CATALOG: Product[] = [
     slug: "logitech-mx-master-3s",
     description: "Mouse inalámbrico ergonómico con desplazamiento Quiet Clicks y sensor de 8K DPI",
     price: 99.0,
+    originalPrice: 129.0,
+    onSale: true,
+    badge: "SALE",
     category: "Perifericos",
+    brand: "Logitech",
+    model: "MX Master 3S",
+    color: "Grafito",
     imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop",
     stock: 20,
     featured: false,
@@ -72,6 +102,24 @@ export default function AdminDashboardPage() {
 
   // State Data
   const [products, setProducts] = useState<Product[]>(DEMO_CATALOG);
+  const [productFilterTab, setProductFilterTab] = useState<"all" | "sale" | "low_stock">("all");
+
+  // Cargar productos de localStorage si existen
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("novamarket_admin_products");
+      if (stored) {
+        setProducts(JSON.parse(stored));
+      }
+    } catch (e) {}
+  }, []);
+
+  const saveProducts = (updatedProducts: Product[]) => {
+    setProducts(updatedProducts);
+    try {
+      localStorage.setItem("novamarket_admin_products", JSON.stringify(updatedProducts));
+    } catch (e) {}
+  };
 
   // CATEGORIES STATE
   const [categories, setCategories] = useState([
@@ -207,6 +255,12 @@ export default function AdminDashboardPage() {
     slug: "",
     description: "",
     price: "",
+    originalPrice: "",
+    onSale: false,
+    badge: "SALE",
+    brand: "Apple",
+    model: "",
+    color: "Negro",
     category: "Laptops",
     imageUrl: "",
     stock: "",
@@ -369,6 +423,12 @@ export default function AdminDashboardPage() {
         slug: product.slug,
         description: product.description,
         price: product.price.toString(),
+        originalPrice: product.originalPrice ? product.originalPrice.toString() : (product.price * 1.15).toFixed(0),
+        onSale: !!product.onSale,
+        badge: product.badge || "SALE",
+        brand: product.brand || "Apple",
+        model: product.model || product.name,
+        color: product.color || "Negro",
         category: product.category,
         imageUrl: product.imageUrl,
         stock: product.stock.toString(),
@@ -381,6 +441,12 @@ export default function AdminDashboardPage() {
         slug: "",
         description: "",
         price: "",
+        originalPrice: "",
+        onSale: false,
+        badge: "SALE",
+        brand: "Apple",
+        model: "",
+        color: "Negro",
         category: categories[0]?.name || "Laptops",
         imageUrl: "",
         stock: "",
@@ -390,14 +456,39 @@ export default function AdminDashboardPage() {
     setIsProductModalOpen(true);
   };
 
+  const handleToggleProductSale = (productId: string) => {
+    const updated = products.map((p) => {
+      if (p.id === productId) {
+        const nextOnSale = !p.onSale;
+        return {
+          ...p,
+          onSale: nextOnSale,
+          originalPrice: nextOnSale ? (p.originalPrice || Math.round(p.price * 1.2)) : undefined,
+          badge: nextOnSale ? (p.badge || "SALE") : undefined,
+        };
+      }
+      return p;
+    });
+    saveProducts(updated);
+  };
+
   const handleSubmitProduct = (e: React.FormEvent) => {
     e.preventDefault();
+    const parsedPrice = parseFloat(productForm.price) || 0;
+    const parsedOriginalPrice = productForm.originalPrice ? parseFloat(productForm.originalPrice) : (productForm.onSale ? Math.round(parsedPrice * 1.2) : undefined);
+
     const newProd: Product = {
       id: editingProduct ? editingProduct.id : "p-" + Date.now(),
       name: productForm.name,
       slug: productForm.slug || "p-" + Date.now(),
       description: productForm.description,
-      price: parseFloat(productForm.price) || 0,
+      price: parsedPrice,
+      originalPrice: productForm.onSale ? parsedOriginalPrice : undefined,
+      onSale: productForm.onSale,
+      badge: productForm.onSale ? (productForm.badge || "SALE") : undefined,
+      brand: productForm.brand,
+      model: productForm.model,
+      color: productForm.color,
       category: productForm.category,
       imageUrl: productForm.imageUrl || "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?q=80&w=600&auto=format&fit=crop",
       stock: parseInt(productForm.stock, 10) || 1,
@@ -405,9 +496,9 @@ export default function AdminDashboardPage() {
     };
 
     if (editingProduct) {
-      setProducts((prev) => prev.map((p) => (p.id === editingProduct.id ? newProd : p)));
+      saveProducts(products.map((p) => (p.id === editingProduct.id ? newProd : p)));
     } else {
-      setProducts((prev) => [newProd, ...prev]);
+      saveProducts([newProd, ...products]);
     }
     setIsProductModalOpen(false);
   };
@@ -662,13 +753,49 @@ export default function AdminDashboardPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-black text-slate-900">Catálogo e Inventario de Productos</h1>
-                <p className="text-xs text-slate-500">Administra precios, stock y nuevos artículos de la tienda.</p>
+                <p className="text-xs text-slate-500">Administra precios, ofertas, descuentos, stock y nuevos artículos de la tienda.</p>
               </div>
               <button
                 onClick={() => handleOpenProductModal()}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-5 py-3 rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-5 py-3 rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center gap-1.5"
               >
-                + Agregar Nuevo Producto
+                <span>+</span>
+                <span>Agregar Nuevo Producto</span>
+              </button>
+            </div>
+
+            {/* Sub-tabs / Filters */}
+            <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+              <button
+                onClick={() => setProductFilterTab("all")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  productFilterTab === "all"
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                Todos ({products.length})
+              </button>
+              <button
+                onClick={() => setProductFilterTab("sale")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  productFilterTab === "sale"
+                    ? "bg-rose-600 text-white shadow-xs"
+                    : "bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200"
+                }`}
+              >
+                <span>🔥 En Oferta</span>
+                <span className="font-mono text-[10px]">({products.filter((p) => p.onSale).length})</span>
+              </button>
+              <button
+                onClick={() => setProductFilterTab("low_stock")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  productFilterTab === "low_stock"
+                    ? "bg-amber-600 text-white shadow-xs"
+                    : "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200"
+                }`}
+              >
+                ⚠️ Stock Bajo ({products.filter((p) => p.stock <= 5).length})
               </button>
             </div>
 
@@ -678,38 +805,77 @@ export default function AdminDashboardPage() {
                   <thead className="bg-slate-50 text-[11px] font-extrabold text-slate-400 uppercase border-b border-slate-100">
                     <tr>
                       <th className="px-6 py-3.5">Producto</th>
-                      <th className="px-6 py-3.5">Categoría</th>
-                      <th className="px-6 py-3.5 text-right">Precio</th>
+                      <th className="px-6 py-3.5">Categoría / Marca</th>
+                      <th className="px-6 py-3.5 text-center">Estado Oferta</th>
+                      <th className="px-6 py-3.5 text-right">Precio Actual</th>
                       <th className="px-6 py-3.5 text-center">Stock</th>
                       <th className="px-6 py-3.5 text-right">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {products.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
-                          <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
-                          <span>{p.name}</span>
-                        </td>
-                        <td className="px-6 py-4 font-semibold text-slate-600">{p.category}</td>
-                        <td className="px-6 py-4 text-right font-extrabold text-slate-900">${p.price.toLocaleString("es-AR")}</td>
-                        <td className="px-6 py-4 text-center">
-                          <span className={`px-2.5 py-1 rounded-full font-bold text-[11px] ${p.stock <= 5 ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}`}>
-                            {p.stock} un.
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex justify-end gap-2">
-                            <button onClick={() => handleOpenProductModal(p)} className="text-xs font-bold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
-                              Editar
+                    {products
+                      .filter((p) => {
+                        if (productFilterTab === "sale") return p.onSale;
+                        if (productFilterTab === "low_stock") return p.stock <= 5;
+                        return true;
+                      })
+                      .map((p) => (
+                        <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
+                            <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                            <div>
+                              <p className="line-clamp-1">{p.name}</p>
+                              {p.badge && (
+                                <span className="text-[9px] font-black uppercase text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 mt-0.5 inline-block">
+                                  {p.badge}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-slate-600">
+                            <div>{p.category}</div>
+                            {p.brand && <div className="text-[10px] text-slate-400 font-bold">{p.brand}</div>}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              onClick={() => handleToggleProductSale(p.id)}
+                              className={`px-3 py-1 rounded-full text-[11px] font-extrabold border transition-all cursor-pointer ${
+                                p.onSale
+                                  ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600 shadow-2xs"
+                                  : "bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-200"
+                              }`}
+                              title={p.onSale ? "Click para desactivar oferta" : "Click para poner en oferta"}
+                            >
+                              {p.onSale ? "🔥 En Oferta (SALE)" : "⚪ Regular"}
                             </button>
-                            <button onClick={() => setProducts(products.filter((item) => item.id !== p.id))} className="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 cursor-pointer">
-                              Eliminar
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {p.onSale && p.originalPrice && (
+                              <span className="text-[10px] text-slate-400 line-through block font-medium">
+                                ${p.originalPrice.toLocaleString("es-AR")}
+                              </span>
+                            )}
+                            <span className={`font-extrabold ${p.onSale ? "text-rose-600 font-black text-sm" : "text-slate-900"}`}>
+                              ${p.price.toLocaleString("es-AR")}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className={`px-2.5 py-1 rounded-full font-bold text-[11px] ${p.stock <= 5 ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}`}>
+                              {p.stock} un.
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2">
+                              <button onClick={() => handleOpenProductModal(p)} className="text-xs font-bold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                Editar
+                              </button>
+                              <button onClick={() => saveProducts(products.filter((item) => item.id !== p.id))} className="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 cursor-pointer">
+                                Eliminar
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -1414,6 +1580,45 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
+              {/* Marca, Modelo y Color */}
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Marca</label>
+                  <input
+                    type="text"
+                    required
+                    value={productForm.brand}
+                    onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 font-semibold"
+                    placeholder="Apple, Sony, etc."
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Modelo</label>
+                  <input
+                    type="text"
+                    required
+                    value={productForm.model}
+                    onChange={(e) => setProductForm({ ...productForm, model: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 font-semibold"
+                    placeholder="M3 Max 16, WH-1000XM5"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Color</label>
+                  <input
+                    type="text"
+                    required
+                    value={productForm.color}
+                    onChange={(e) => setProductForm({ ...productForm, color: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 font-semibold"
+                    placeholder="Negro, Gris Espacial, etc."
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Categoría</label>
@@ -1432,17 +1637,92 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Precio ($)</label>
+                  <label className="block font-bold text-slate-700 mb-1">Precio Actual / Oferta ($)</label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={productForm.price}
                     onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:outline-none focus:border-blue-500"
                     placeholder="1299.00"
                   />
                 </div>
+              </div>
+
+              {/* SECCIÓN ESPECIAL: CONFIGURAR OFERTA / DESCUENTO */}
+              <div className="p-4 bg-rose-50/70 border border-rose-200 rounded-2xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="onSaleCheckbox"
+                      checked={productForm.onSale}
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        const currentPrice = parseFloat(productForm.price) || 0;
+                        setProductForm({
+                          ...productForm,
+                          onSale: isChecked,
+                          originalPrice: isChecked && !productForm.originalPrice ? (currentPrice * 1.2).toFixed(0) : productForm.originalPrice,
+                          badge: isChecked ? (productForm.badge || "SALE") : "",
+                        });
+                      }}
+                      className="w-4 h-4 text-rose-600 rounded focus:ring-rose-500 cursor-pointer"
+                    />
+                    <label htmlFor="onSaleCheckbox" className="font-extrabold text-rose-900 cursor-pointer text-xs">
+                      🔥 Poner este producto en Oferta (SALE / Descuento)
+                    </label>
+                  </div>
+                  {productForm.onSale && (
+                    <span className="bg-rose-500 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                      Oferta Activa
+                    </span>
+                  )}
+                </div>
+
+                {productForm.onSale && (
+                  <div className="grid grid-cols-2 gap-3 pt-1 animate-in fade-in duration-200">
+                    <div>
+                      <label className="block font-bold text-rose-900 mb-1">
+                        Precio Normal / Lista ($ - Tachado)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        required={productForm.onSale}
+                        value={productForm.originalPrice}
+                        onChange={(e) => setProductForm({ ...productForm, originalPrice: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-rose-300 rounded-xl font-bold text-slate-900 focus:outline-none focus:border-rose-500"
+                        placeholder="1499.00"
+                      />
+                      {parseFloat(productForm.originalPrice) > parseFloat(productForm.price) && (
+                        <p className="text-[10px] text-emerald-700 font-extrabold mt-1">
+                          🎉 {Math.round((1 - parseFloat(productForm.price) / parseFloat(productForm.originalPrice)) * 100)}% de Descuento aplicado
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-rose-900 mb-1">
+                        Etiqueta / Badge Promocional
+                      </label>
+                      <select
+                        value={productForm.badge}
+                        onChange={(e) => setProductForm({ ...productForm, badge: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-rose-300 rounded-xl font-extrabold text-rose-700 focus:outline-none focus:border-rose-500 cursor-pointer"
+                      >
+                        <option value="SALE">🔥 SALE</option>
+                        <option value="OFERTA">⚡ OFERTA</option>
+                        <option value="35% OFF">🏷️ 35% OFF</option>
+                        <option value="20% OFF">🏷️ 20% OFF</option>
+                        <option value="BEST SELLER">⭐ BEST SELLER</option>
+                        <option value="PREMIUM">★ PREMIUM</option>
+                        <option value="LIQUIDACIÓN">💥 LIQUIDACIÓN</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -1489,7 +1769,7 @@ export default function AdminDashboardPage() {
                   id="featured"
                   checked={productForm.featured}
                   onChange={(e) => setProductForm({ ...productForm, featured: e.target.checked })}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
                 />
                 <label htmlFor="featured" className="text-xs font-bold text-slate-700 cursor-pointer">
                   Marcar como Producto Destacado (Featured)

@@ -83,6 +83,21 @@ export default function ProductDetailPage() {
       if (!productId) return;
       try {
         setLoading(true);
+
+        // Check if admin has customized products in localStorage
+        try {
+          const stored = localStorage.getItem("novamarket_admin_products");
+          if (stored) {
+            const list: Product[] = JSON.parse(stored);
+            const found = list.find((p) => p.id === productId || p.slug === productId);
+            if (found) {
+              setProduct(found);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (e) {}
+
         const res = await api.get(`/products/${productId}`);
         if (res.data) {
           setProduct(res.data);
@@ -191,13 +206,36 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Pricing Box */}
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-black text-blue-600">${product.price.toLocaleString("es-AR")}</span>
-              <span className="text-xs font-semibold text-slate-400">IVA incluido</span>
+          <div className="p-5 bg-slate-50 rounded-3xl border border-slate-200/80 space-y-2">
+            {(product.onSale || (product.originalPrice && product.originalPrice > product.price)) && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-400 font-bold line-through">
+                  Precio de lista: ${(product.originalPrice || Math.round(product.price * 1.2)).toLocaleString("es-AR")}
+                </span>
+                <span className="bg-rose-500 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-2xs">
+                  {product.originalPrice && product.originalPrice > product.price
+                    ? `-${Math.round((1 - product.price / product.originalPrice) * 100)}% OFF`
+                    : "EN OFERTA"}
+                </span>
+              </div>
+            )}
+
+            <div className="flex items-baseline space-x-2.5">
+              <span className={`text-3xl sm:text-4xl font-black ${product.onSale || (product.originalPrice && product.originalPrice > product.price) ? "text-rose-600" : "text-blue-600"}`}>
+                ${product.price.toLocaleString("es-AR")}
+              </span>
+              <span className="text-xs font-bold text-slate-400">IVA incluido</span>
             </div>
-            <p className="text-xs text-emerald-600 font-bold">
-              💳 Hasta 12 cuotas de ${(product.price / 12).toFixed(2)} sin interés
+
+            {(product.onSale || (product.originalPrice && product.originalPrice > product.price)) && product.originalPrice && (
+              <p className="text-xs text-emerald-700 font-extrabold flex items-center gap-1">
+                <span>✓</span>
+                <span>¡Ahorras ${(product.originalPrice - product.price).toLocaleString("es-AR")} en esta compra!</span>
+              </p>
+            )}
+
+            <p className="text-xs text-emerald-600 font-bold pt-1">
+              💳 Hasta 12 cuotas de ${(product.price / 12).toFixed(2)} sin interés con todas las tarjetas
             </p>
           </div>
 
