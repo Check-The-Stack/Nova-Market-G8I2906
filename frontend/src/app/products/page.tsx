@@ -13,9 +13,12 @@ const CATALOG_FALLBACK: Product[] = [
     id: "p1",
     name: "MacBook Pro 16 M3 Max",
     slug: "macbook-pro-16-m3-max",
-    description: "Chip M3 Max de Apple con CPU de 16 núcleos, GPU de 40 núcleos, 36GB RAM, 1TB SSD",
+    description: "Chip M3 Max de Apple con CPU de 16 núcleos, GPU de 40 núcleos, 36GB RAM, 1TB SSD. Pantalla Liquid Retina XDR de 16.2 pulgadas.",
     price: 3499.0,
-    category: "Laptops",
+    originalPrice: 3899.0,
+    onSale: false,
+    badge: "PREMIUM",
+    category: "Computación",
     brand: "Apple",
     model: "MacBook Pro 16",
     color: "Gris Espacial",
@@ -27,9 +30,12 @@ const CATALOG_FALLBACK: Product[] = [
     id: "p2",
     name: "iPhone 15 Pro Max 256GB Titanium",
     slug: "iphone-15-pro-max-256gb",
-    description: "Diseño de titanio de calidad aeroespacial, Chip A17 Pro, Cámara de 48 MP",
+    description: "Diseño de titanio de calidad aeroespacial, Chip A17 Pro, Cámara de 48 MP con zoom óptico de 5x.",
     price: 1299.0,
-    category: "Celulares",
+    originalPrice: 1449.0,
+    onSale: true,
+    badge: "BEST SELLER",
+    category: "Smart Home",
     brand: "Apple",
     model: "iPhone 15 Pro Max",
     color: "Titanio Natural",
@@ -39,24 +45,64 @@ const CATALOG_FALLBACK: Product[] = [
   },
   {
     id: "p3",
-    name: "Monitor Sony Inzone M9 4K 144Hz IPS",
-    slug: "sony-inzone-m9-4k",
-    description: "Monitor Gaming 27'' 4K HDR10 con Full Array Local Dimming, DisplayPort 1.4 y HDMI 2.1",
-    price: 899.0,
-    category: "Monitores",
-    brand: "Sony",
-    model: "Inzone M9",
-    color: "Blanco / Negro",
-    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800&auto=format&fit=crop",
-    stock: 5,
+    name: "OmniHub Smart Terminal",
+    slug: "omnihub-smart-terminal",
+    description: "Unified control for your entire ecosystem with Matter support and AI voice assistant.",
+    price: 129.5,
+    originalPrice: 159.0,
+    onSale: true,
+    badge: "BEST SELLER",
+    category: "Smart Home",
+    brand: "NovaTech",
+    model: "OmniHub",
+    color: "Gris Grafito",
+    imageUrl: "https://images.unsplash.com/photo-1543512214-318c7553f230?q=80&w=800&auto=format&fit=crop",
+    stock: 25,
     featured: true,
   },
   {
     id: "p4",
+    name: "Velox G-700 Mouse",
+    slug: "velox-g-700-mouse",
+    description: "32,000 DPI ultra-responsive optical sensor with honeycomb lightweight design.",
+    price: 89.0,
+    originalPrice: 115.0,
+    onSale: true,
+    badge: "SALE",
+    category: "Perifericos",
+    brand: "Velox",
+    model: "G-700",
+    color: "Negro",
+    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop",
+    stock: 30,
+    featured: true,
+  },
+  {
+    id: "p5",
+    name: "Visionary 4K Display",
+    slug: "visionary-4k-display",
+    description: "144Hz refresh rate with HDR 1000 and 99% DCI-P3 color accuracy for creative work.",
+    price: 749.0,
+    originalPrice: 899.0,
+    onSale: false,
+    badge: "PREMIUM",
+    category: "Computación",
+    brand: "Visionary",
+    model: "4K Pro",
+    color: "Plata",
+    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800&auto=format&fit=crop",
+    stock: 7,
+    featured: true,
+  },
+  {
+    id: "p6",
     name: "Sony WH-1000XM5 Wireless Headphones",
     slug: "sony-wh-1000xm5",
-    description: "Auriculares inalámbricos con cancelación de ruido líder en la industria y audio de alta resolución",
+    description: "Auriculares inalámbricos con cancelación de ruido líder en la industria y sonido de alta fidelidad.",
     price: 399.0,
+    originalPrice: 449.0,
+    onSale: true,
+    badge: "SALE",
     category: "Audio",
     brand: "Sony",
     model: "WH-1000XM5",
@@ -66,25 +112,14 @@ const CATALOG_FALLBACK: Product[] = [
     featured: true,
   },
   {
-    id: "p5",
-    name: "Logitech MX Master 3S Performance Mouse",
-    slug: "logitech-mx-master-3s",
-    description: "Mouse inalámbrico ergonómico con desplazamiento Quiet Clicks y sensor de 8K DPI",
-    price: 99.0,
-    category: "Perifericos",
-    brand: "Logitech",
-    model: "MX Master 3S",
-    color: "Grafito",
-    imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop",
-    stock: 20,
-    featured: false,
-  },
-  {
-    id: "p6",
+    id: "p7",
     name: "Teclado Mecánico Keychron Q1 Pro Wireless",
     slug: "keychron-q1-pro",
-    description: "Teclado mecánico custom de aluminio QMK/VIA con switches Gateron G Pro",
+    description: "Teclado mecánico custom de aluminio QMK/VIA con switches Gateron G Pro.",
     price: 199.0,
+    originalPrice: 229.0,
+    onSale: false,
+    badge: "BEST SELLER",
     category: "Perifericos",
     brand: "Keychron",
     model: "Q1 Pro",
@@ -94,26 +129,15 @@ const CATALOG_FALLBACK: Product[] = [
     featured: false,
   },
   {
-    id: "p7",
-    name: "Dell XPS 15 Intel i9 64GB RAM 2TB",
-    slug: "dell-xps-15-i9",
-    description: "Pantalla OLED 3.5K Touch, GeForce RTX 4070, chasis de aluminio pulido",
-    price: 2899.0,
-    category: "Laptops",
-    brand: "Dell",
-    model: "XPS 15",
-    color: "Plata Platino",
-    imageUrl: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=800&auto=format&fit=crop",
-    stock: 3,
-    featured: true,
-  },
-  {
     id: "p8",
     name: "Samsung Galaxy S24 Ultra 512GB Titanium",
     slug: "samsung-galaxy-s24-ultra",
-    description: "Galaxy AI integrado, S-Pen, Cámara de 200 MP, Pantalla QHD+ Dynamic AMOLED 2X",
+    description: "Galaxy AI integrado, S-Pen, Cámara de 200 MP, Pantalla QHD+ Dynamic AMOLED 2X.",
     price: 1399.0,
-    category: "Celulares",
+    originalPrice: 1599.0,
+    onSale: true,
+    badge: "SALE",
+    category: "Smart Home",
     brand: "Samsung",
     model: "Galaxy S24 Ultra",
     color: "Titanio Gris",
@@ -123,30 +147,33 @@ const CATALOG_FALLBACK: Product[] = [
   },
 ];
 
-const CATEGORIES = ["Todas", "Laptops", "Celulares", "Monitores", "Audio", "Perifericos"];
+const CATEGORIES = ["Todo tecnología", "Computación", "Audio", "Smart Home", "Storage", "Perifericos"];
 
 const COLOR_MAP: Record<string, { bg: string; border: string }> = {
   "Negro": { bg: "bg-slate-900", border: "border-slate-800" },
   "Negro Carbono": { bg: "bg-neutral-900", border: "border-neutral-800" },
-  "Gris Espacial": { bg: "bg-slate-600", border: "border-slate-500" },
-  "Titanio Gris": { bg: "bg-stone-500", border: "border-stone-400" },
-  "Titanio Natural": { bg: "bg-amber-200/80", border: "border-amber-300" },
-  "Plata Platino": { bg: "bg-slate-300", border: "border-slate-400" },
-  "Grafito": { bg: "bg-zinc-700", border: "border-zinc-600" },
-  "Blanco / Negro": { bg: "bg-gradient-to-tr from-slate-900 via-slate-100 to-white", border: "border-slate-300" },
+  "Gris Espacial": { bg: "bg-slate-700", border: "border-slate-600" },
+  "Gris Grafito": { bg: "bg-stone-700", border: "border-stone-600" },
+  "Titanio Natural": { bg: "bg-zinc-400", border: "border-zinc-500" },
+  "Titanio Gris": { bg: "bg-slate-500", border: "border-slate-600" },
+  "Plata": { bg: "bg-slate-200", border: "border-slate-300" },
+  "Plata Platino": { bg: "bg-slate-100", border: "border-slate-300" },
+  "Blanco / Negro": { bg: "bg-slate-300", border: "border-slate-400" },
+  "Grafito": { bg: "bg-neutral-800", border: "border-neutral-700" },
 };
 
-function CatalogContent() {
+function ProductsCatalogContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams?.get("category") || "Todas";
+  const initialCategory = searchParams?.get("category") || "Todo tecnología";
   const initialSearch = searchParams?.get("search") || "";
 
   const { addItem } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [products, setProducts] = useState<Product[]>(CATALOG_FALLBACK);
 
-  // Filter states: Marca, Modelo, Color, Precio Minimo, Precio Maximo, Categoría, Búsqueda, Stock, Orden
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const [products, setProducts] = useState<Product[]>(CATALOG_FALLBACK);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    initialCategory === "Todas" ? "Todo tecnología" : initialCategory
+  );
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [selectedBrand, setSelectedBrand] = useState<string>("Todas");
   const [selectedModel, setSelectedModel] = useState<string>("Todos");
@@ -155,7 +182,7 @@ function CatalogContent() {
   const [maxPrice, setMaxPrice] = useState<number>(4000);
   const [onlyInStock, setOnlyInStock] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "name-asc">("featured");
-  const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
+  const [showFilterDrawer, setShowFilterDrawer] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -172,7 +199,6 @@ function CatalogContent() {
         }
 
         if (list.length > 0) {
-          // Normalize and inject brand/model/color if not present in DB
           const enriched = list.map((p) => {
             const fallbackMatch = CATALOG_FALLBACK.find((f) => f.id === p.id || f.name === p.name);
             return {
@@ -195,7 +221,6 @@ function CatalogContent() {
         console.log("Using local/fallback products catalog");
       }
 
-      // Check if admin has customized products in localStorage
       try {
         const stored = localStorage.getItem("novamarket_admin_products");
         if (stored) {
@@ -214,27 +239,30 @@ function CatalogContent() {
   }, []);
 
   useEffect(() => {
-    if (searchParams?.get("category")) setSelectedCategory(searchParams.get("category") || "Todas");
+    if (searchParams?.get("category")) {
+      const cat = searchParams.get("category");
+      setSelectedCategory(cat === "Todas" ? "Todo tecnología" : (cat || "Todo tecnología"));
+    }
     if (searchParams?.get("search")) setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);
 
-  // Derived unique lists for filters
+  // Derived lists for filters
   const availableBrands = useMemo(() => {
     const brands = new Set<string>();
     products.forEach((p) => {
       if (p.brand) brands.add(p.brand);
     });
-    return ["Todas", ...Array.from(brands).sort()];
+    return ["Todas", ...Array.from(brands)];
   }, [products]);
 
   const availableModels = useMemo(() => {
     const models = new Set<string>();
     products.forEach((p) => {
-      if (selectedBrand === "Todas" || p.brand === selectedBrand) {
+      if (selectedBrand === "Todas" || p.brand?.toLowerCase() === selectedBrand.toLowerCase()) {
         if (p.model) models.add(p.model);
       }
     });
-    return ["Todos", ...Array.from(models).sort()];
+    return ["Todos", ...Array.from(models)];
   }, [products, selectedBrand]);
 
   const availableColors = useMemo(() => {
@@ -242,51 +270,67 @@ function CatalogContent() {
     products.forEach((p) => {
       if (p.color) colors.add(p.color);
     });
-    return ["Todos", ...Array.from(colors).sort()];
+    return ["Todos", ...Array.from(colors)];
   }, [products]);
 
-  // Reset model selection if chosen brand doesn't contain that model
-  useEffect(() => {
-    if (selectedModel !== "Todos" && !availableModels.includes(selectedModel)) {
-      setSelectedModel("Todos");
-    }
-  }, [selectedBrand, availableModels, selectedModel]);
-
-  // Comprehensive Filtering
+  // Filtered and Sorted products
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
+        // Category filter
         const matchCategory =
-          selectedCategory === "Todas" || p.category?.toLowerCase() === selectedCategory.toLowerCase();
-        const matchBrand =
-          selectedBrand === "Todas" || p.brand?.toLowerCase() === selectedBrand.toLowerCase();
-        const matchModel =
-          selectedModel === "Todos" || p.model?.toLowerCase() === selectedModel.toLowerCase();
-        const matchColor =
-          selectedColor === "Todos" || p.color?.toLowerCase() === selectedColor.toLowerCase();
+          selectedCategory === "Todo tecnología" ||
+          p.category?.toLowerCase() === selectedCategory.toLowerCase() ||
+          (selectedCategory === "Computación" && (p.category === "Laptops" || p.category === "Monitores"));
+
+        // Search Query filter
         const matchSearch =
           !searchQuery ||
           p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (p.brand && p.brand.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (p.model && p.model.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (p.color && p.color.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          p.category?.toLowerCase().includes(searchQuery.toLowerCase());
+          (p.brand && p.brand.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        // Brand filter
+        const matchBrand =
+          selectedBrand === "Todas" || p.brand?.toLowerCase() === selectedBrand.toLowerCase();
+
+        // Model filter
+        const matchModel =
+          selectedModel === "Todos" || p.model?.toLowerCase() === selectedModel.toLowerCase();
+
+        // Color filter
+        const matchColor =
+          selectedColor === "Todos" || p.color?.toLowerCase() === selectedColor.toLowerCase();
+
+        // Price range filter
         const matchPrice = p.price >= minPrice && p.price <= maxPrice;
+
+        // Stock availability
         const matchStock = !onlyInStock || p.stock > 0;
 
-        return matchCategory && matchBrand && matchModel && matchColor && matchSearch && matchPrice && matchStock;
+        return matchCategory && matchSearch && matchBrand && matchModel && matchColor && matchPrice && matchStock;
       })
       .sort((a, b) => {
         if (sortBy === "price-asc") return a.price - b.price;
         if (sortBy === "price-desc") return b.price - a.price;
         if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-        return 0;
+        return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
-  }, [products, selectedCategory, selectedBrand, selectedModel, selectedColor, searchQuery, minPrice, maxPrice, onlyInStock, sortBy]);
+  }, [
+    products,
+    selectedCategory,
+    searchQuery,
+    selectedBrand,
+    selectedModel,
+    selectedColor,
+    minPrice,
+    maxPrice,
+    onlyInStock,
+    sortBy,
+  ]);
 
   const resetAllFilters = () => {
-    setSelectedCategory("Todas");
+    setSelectedCategory("Todo tecnología");
     setSearchQuery("");
     setSelectedBrand("Todas");
     setSelectedModel("Todos");
@@ -298,457 +342,335 @@ function CatalogContent() {
   };
 
   const hasActiveFilters =
-    selectedCategory !== "Todas" ||
+    selectedCategory !== "Todo tecnología" ||
     searchQuery !== "" ||
     selectedBrand !== "Todas" ||
     selectedModel !== "Todos" ||
     selectedColor !== "Todos" ||
     minPrice > 0 ||
     maxPrice < 4000 ||
-    onlyInStock ||
-    sortBy !== "featured";
+    onlyInStock;
 
   return (
-    <div className="space-y-8 py-6 pb-16">
+    <div className="space-y-8 py-4 pb-16">
       
-      {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Catálogo de Productos</h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Filtra por Marca, Modelo, Color y Rango de Precios para encontrar el equipo ideal.
-          </p>
+      {/* 1. TOP PROMO SPECIAL BANNER - EXACT UI MATCH (Catalo.png) */}
+      <section className="relative rounded-3xl overflow-hidden bg-slate-950 border border-slate-800 shadow-xl min-h-[260px] sm:min-h-[340px] flex items-center">
+        {/* Laptop Hero Background */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/portada.png"
+            alt="Promo Especial"
+            className="w-full h-full object-cover object-center"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
         </div>
 
-        {/* Top Search bar & Sort Controls */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 sm:w-72">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por marca, modelo o palabra clave..."
-              className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 shadow-2xs"
-            />
-            <svg className="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+        <div className="relative z-10 w-full p-6 sm:p-10 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
+          <div className="hidden md:block md:w-1/2" />
+          
+          <div className="max-w-md md:text-right space-y-2 ml-auto">
+            <span className="text-cyan-400 font-extrabold text-[11px] uppercase tracking-[0.2em] block">
+              PROMO ESPECIAL
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+              Potenciá tu <br />
+              productividad
+            </h1>
+            <div className="pt-2">
+              <span className="text-sm text-slate-300 font-semibold block">Hasta</span>
+              <div className="text-cyan-400 font-black text-5xl sm:text-6xl tracking-tight leading-none">
+                35% <span className="text-2xl sm:text-3xl text-white font-black">OFF</span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 font-medium mt-1">
+                en laptops seleccionadas
+              </p>
+            </div>
           </div>
+        </div>
+      </section>
 
+      {/* 2. HORIZONTAL CATEGORY PILLS BAR - EXACT UI MATCH (Catalo.png) */}
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+        
+        <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none py-1 flex-1">
+          {/* Toggle Filter Button */}
+          <button
+            onClick={() => setShowFilterDrawer(!showFilterDrawer)}
+            className={`p-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+              showFilterDrawer || hasActiveFilters
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+            title="Filtros avanzados"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span className="hidden sm:inline">Filtros</span>
+          </button>
+
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                selectedCategory === cat
+                  ? "bg-blue-100 text-blue-700 font-extrabold shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort selector */}
+        <div className="shrink-0 hidden md:block">
           <select
             value={sortBy}
             onChange={(e: any) => setSortBy(e.target.value)}
-            className="bg-white border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer"
+            className="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 rounded-xl px-3 py-2 focus:outline-none focus:border-blue-500 cursor-pointer"
           >
             <option value="featured">Destacados</option>
             <option value="price-asc">Precio: Menor a Mayor</option>
             <option value="price-desc">Precio: Mayor a Menor</option>
-            <option value="name-asc">Nombre: A - Z</option>
+            <option value="name-asc">Nombre (A - Z)</option>
           </select>
-
-          {/* Mobile Filter Toggle */}
-          <button
-            onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className="lg:hidden bg-blue-600 text-white p-2.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-xs"
-          >
-            <span>Filtros</span>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-          </button>
         </div>
+
       </div>
 
-      {/* Category Pills Bar */}
-      <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
-        {CATEGORIES.map((cat) => {
-          const count =
-            cat === "Todas"
-              ? products.length
-              : products.filter((p) => p.category?.toLowerCase() === cat.toLowerCase()).length;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer flex items-center space-x-2 ${
-                selectedCategory === cat
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              }`}
-            >
-              <span>{cat}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                selectedCategory === cat ? "bg-blue-700 text-blue-100" : "bg-slate-100 text-slate-500"
-              }`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      {/* 3. ADVANCED FILTERS PANEL (Expandable) */}
+      {showFilterDrawer && (
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-6 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 className="text-sm font-black text-slate-900">Filtros Avanzados de Búsqueda</h3>
+            {hasActiveFilters && (
+              <button
+                onClick={resetAllFilters}
+                className="text-xs font-bold text-rose-600 hover:underline cursor-pointer"
+              >
+                Limpiar todos los filtros
+              </button>
+            )}
+          </div>
 
-      {/* Main Content Grid: Filters Sidebar + Products */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* ========================================================================= */}
-        {/* LEFT COLUMN: FILTERS SIDEBAR (MARCA, MODELO, COLOR, PRECIO MIN Y MAX)     */}
-        {/* ========================================================================= */}
-        <aside className={`lg:col-span-3 space-y-6 ${showMobileFilters ? "block" : "hidden lg:block"}`}>
-          
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             
-            {/* Header / Reset */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                <h3 className="font-extrabold text-slate-900 text-sm">Filtros de Búsqueda</h3>
-              </div>
-              {hasActiveFilters && (
-                <button
-                  onClick={resetAllFilters}
-                  className="text-[11px] font-bold text-rose-500 hover:text-rose-600 hover:underline"
-                >
-                  Limpiar todo
-                </button>
-              )}
+            {/* Search Input */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Buscar por palabra</label>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="MacBook, Mouse, 4K..."
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500"
+              />
             </div>
 
-            {/* 1. FILTRO DE MARCA */}
-            <div className="space-y-2.5">
-              <label className="text-xs font-bold text-slate-900 flex items-center justify-between">
-                <span>🏷️ Marca</span>
-                {selectedBrand !== "Todas" && (
-                  <span className="text-[10px] text-blue-600 font-semibold cursor-pointer" onClick={() => setSelectedBrand("Todas")}>
-                    (Restablecer)
-                  </span>
-                )}
-              </label>
+            {/* Brand Filter */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Marca</label>
               <select
                 value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer"
+                onChange={(e) => {
+                  setSelectedBrand(e.target.value);
+                  setSelectedModel("Todos");
+                }}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:outline-none focus:border-blue-500 cursor-pointer"
               >
-                {availableBrands.map((brand) => (
-                  <option key={brand} value={brand}>
-                    {brand}
-                  </option>
+                {availableBrands.map((b) => (
+                  <option key={b} value={b}>{b}</option>
                 ))}
               </select>
             </div>
 
-            {/* 2. FILTRO DE MODELO */}
-            <div className="space-y-2.5">
-              <label className="text-xs font-bold text-slate-900 flex items-center justify-between">
-                <span>📱 Modelo</span>
-                {selectedModel !== "Todos" && (
-                  <span className="text-[10px] text-blue-600 font-semibold cursor-pointer" onClick={() => setSelectedModel("Todos")}>
-                    (Restablecer)
-                  </span>
-                )}
-              </label>
+            {/* Model Filter */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Modelo</label>
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:outline-none focus:border-blue-500 cursor-pointer"
               >
-                {availableModels.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
+                {availableModels.map((m) => (
+                  <option key={m} value={m}>{m}</option>
                 ))}
               </select>
             </div>
 
-            {/* 3. FILTRO DE COLOR */}
-            <div className="space-y-2.5">
-              <label className="text-xs font-bold text-slate-900 flex items-center justify-between">
-                <span>🎨 Color</span>
-                {selectedColor !== "Todos" && (
-                  <span className="text-[10px] text-blue-600 font-semibold cursor-pointer" onClick={() => setSelectedColor("Todos")}>
-                    (Restablecer)
-                  </span>
-                )}
-              </label>
-              <div className="grid grid-cols-2 gap-1.5">
-                {availableColors.map((color) => {
-                  const isSelected = selectedColor === color;
-                  const colorDetails = COLOR_MAP[color];
-                  return (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => setSelectedColor(isSelected ? "Todos" : color)}
-                      className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all flex items-center space-x-1.5 cursor-pointer ${
-                        isSelected
-                          ? "bg-blue-50 border-blue-600 text-blue-900 shadow-2xs"
-                          : "bg-slate-50/70 border-slate-200 text-slate-700 hover:bg-slate-100"
-                      }`}
-                    >
-                      {colorDetails && (
-                        <span className={`w-3 h-3 rounded-full shrink-0 border ${colorDetails.bg} ${colorDetails.border}`} />
-                      )}
-                      <span className="truncate">{color}</span>
-                    </button>
-                  );
-                })}
+            {/* Color Filter */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Color</label>
+              <select
+                value={selectedColor}
+                onChange={(e) => setSelectedColor(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:outline-none focus:border-blue-500 cursor-pointer"
+              >
+                {availableColors.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="sm:col-span-2 space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+              <div className="flex justify-between text-xs font-bold text-slate-700">
+                <span>Rango de Precio:</span>
+                <span className="text-blue-600">${minPrice} — ${maxPrice.toLocaleString("es-AR")}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  max={maxPrice}
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(Number(e.target.value))}
+                  placeholder="Min"
+                  className="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900"
+                />
+                <span className="text-slate-400 text-xs">a</span>
+                <input
+                  type="number"
+                  min={minPrice}
+                  max={4000}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  placeholder="Max"
+                  className="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900"
+                />
+                <input
+                  type="range"
+                  min={50}
+                  max={4000}
+                  step={50}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="flex-1 accent-blue-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none"
+                />
               </div>
             </div>
 
-            {/* 4. FILTRO DE PRECIO MINIMO Y MAXIMO */}
-            <div className="space-y-3 pt-2 border-t border-slate-100">
-              <label className="text-xs font-bold text-slate-900 block">
-                💵 Rango de Precios
-              </label>
-              
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <span className="text-[10px] text-slate-400 font-semibold block mb-0.5">Precio Mínimo</span>
-                  <div className="relative">
-                    <span className="absolute left-2.5 top-2 text-slate-400 font-bold text-xs">$</span>
-                    <input
-                      type="number"
-                      min={0}
-                      max={maxPrice}
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(Math.max(0, Number(e.target.value)))}
-                      className="w-full pl-6 pr-2 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <span className="text-[10px] text-slate-400 font-semibold block mb-0.5">Precio Máximo</span>
-                  <div className="relative">
-                    <span className="absolute left-2.5 top-2 text-slate-400 font-bold text-xs">$</span>
-                    <input
-                      type="number"
-                      min={minPrice}
-                      max={10000}
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(Math.max(minPrice, Number(e.target.value)))}
-                      className="w-full pl-6 pr-2 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Slider Visual */}
-              <input
-                type="range"
-                min={50}
-                max={4000}
-                step={50}
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="w-full accent-blue-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none"
-              />
-              <div className="flex justify-between text-[10px] font-bold text-slate-400">
-                <span>$0</span>
-                <span>Hasta ${maxPrice.toLocaleString("es-AR")}</span>
-              </div>
-            </div>
-
-            {/* 5. SOLO EN STOCK */}
-            <div className="pt-2 border-t border-slate-100">
-              <label className="flex items-center space-x-2 text-xs font-bold text-slate-700 cursor-pointer select-none">
+            {/* Stock Availability */}
+            <div className="sm:col-span-2 flex items-center justify-end">
+              <label className="flex items-center space-x-2 text-xs font-bold text-slate-700 cursor-pointer select-none bg-slate-50 border border-slate-200 p-3 rounded-2xl w-full sm:w-auto">
                 <input
                   type="checkbox"
                   checked={onlyInStock}
                   onChange={(e) => setOnlyInStock(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 rounded-xs border-slate-300 focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
                 />
-                <span>Solo con stock disponible</span>
+                <span>Mostrar solo productos con stock disponible</span>
               </label>
             </div>
 
           </div>
+        </div>
+      )}
 
-        </aside>
-
-        {/* ========================================================================= */}
-        {/* RIGHT COLUMN: PRODUCTS LIST & ACTIVE FILTER TAGS                          */}
-        {/* ========================================================================= */}
-        <main className="lg:col-span-9 space-y-5">
-          
-          {/* Active Filter Pills Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-slate-500">Filtros aplicados:</span>
-              
-              {selectedCategory !== "Todas" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-lg">
-                  Cat: {selectedCategory}
-                  <button onClick={() => setSelectedCategory("Todas")} className="hover:text-blue-900 font-black">✕</button>
-                </span>
-              )}
-
-              {selectedBrand !== "Todas" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded-lg">
-                  Marca: {selectedBrand}
-                  <button onClick={() => setSelectedBrand("Todas")} className="hover:text-indigo-900 font-black">✕</button>
-                </span>
-              )}
-
-              {selectedModel !== "Todos" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-lg">
-                  Modelo: {selectedModel}
-                  <button onClick={() => setSelectedModel("Todos")} className="hover:text-purple-900 font-black">✕</button>
-                </span>
-              )}
-
-              {selectedColor !== "Todos" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-lg">
-                  Color: {selectedColor}
-                  <button onClick={() => setSelectedColor("Todos")} className="hover:text-emerald-900 font-black">✕</button>
-                </span>
-              )}
-
-              {(minPrice > 0 || maxPrice < 4000) && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-lg">
-                  ${minPrice} - ${maxPrice}
-                  <button onClick={() => { setMinPrice(0); setMaxPrice(4000); }} className="hover:text-amber-900 font-black">✕</button>
-                </span>
-              )}
-
-              {!hasActiveFilters && (
-                <span className="text-[11px] text-slate-400 italic">Ningún filtro específico (Mostrando todo)</span>
-              )}
-            </div>
-
-            <span className="text-xs font-extrabold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full shrink-0">
-              {filteredProducts.length} {filteredProducts.length === 1 ? "producto" : "productos"}
-            </span>
+      {/* 4. PRODUCTS GRID (4 COLUMNS) - EXACT UI MATCH (Catalo.png) */}
+      {filteredProducts.length === 0 ? (
+        <div className="bg-white border border-slate-200 rounded-3xl p-16 text-center space-y-4 shadow-2xs">
+          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-2xl mx-auto text-slate-400 border border-slate-200">
+            🔍
           </div>
+          <h3 className="text-xl font-bold text-slate-900">No encontramos productos</h3>
+          <p className="text-xs text-slate-500 max-w-md mx-auto">
+            No hay artículos que coincidan con los filtros seleccionados. Intenta ampliar el rango de precio o cambiar la categoría.
+          </p>
+          <button
+            onClick={resetAllFilters}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md cursor-pointer"
+          >
+            Restablecer Filtros
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-3 group relative"
+            >
+              {/* Top Row: Badge & Heart */}
+              <div className="flex items-center justify-between relative z-10">
+                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wide ${
+                  product.badge === "SALE" || product.onSale
+                    ? "bg-rose-50 text-rose-600 border border-rose-200"
+                    : product.badge === "PREMIUM"
+                    ? "bg-slate-900 text-amber-300"
+                    : "bg-blue-50 text-blue-700 border border-blue-100"
+                }`}>
+                  {product.badge || (product.onSale ? "SALE" : "BEST SELLER")}
+                </span>
 
-          {/* Products Grid */}
-          {filteredProducts.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 text-center space-y-4 border border-slate-200">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">No encontramos productos coincidentes</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
-                No hay productos que cumplan con la combinación de Marca, Modelo, Color y Rango de Precio seleccionada.
-              </p>
-              <button
-                onClick={resetAllFilters}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-xs transition-all"
-              >
-                Limpiar todos los filtros
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between space-y-4 group relative"
+                <button
+                  onClick={() => toggleFavorite(product)}
+                  className="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors shadow-2xs cursor-pointer"
+                  aria-label="Favorito"
                 >
-                  {/* Top Bar: Category, Brand & Heart */}
-                  <div className="flex items-center justify-between relative z-10">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="bg-slate-100 text-slate-700 text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded-full uppercase">
-                        {product.category}
-                      </span>
-                      {product.brand && (
-                        <span className="bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                          {product.brand}
-                        </span>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => toggleFavorite(product)}
-                      className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-xs border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors shadow-2xs cursor-pointer"
-                      aria-label="Favorito"
-                    >
-                      <svg
-                        className={`w-4 h-4 ${isFavorite(product.id) ? "fill-rose-500 text-rose-500" : "fill-none"}`}
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.683a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Image Thumbnail */}
-                  <Link href={`/products/${product.id}`} className="block w-full h-44 rounded-xl overflow-hidden bg-slate-50 relative">
-                    <img
-                      src={product.imageUrl || "/placeholder.png"}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  <svg
+                    className={`w-3.5 h-3.5 ${isFavorite(product.id) ? "fill-rose-500 text-rose-500" : "fill-none"}`}
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.683a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                     />
-                  </Link>
+                  </svg>
+                </button>
+              </div>
 
-                  {/* Product Details Info: Model & Color Specs */}
-                  <div className="space-y-1.5 flex-1">
-                    <Link href={`/products/${product.id}`} className="hover:text-blue-600 transition-colors block">
-                      <h3 className="font-bold text-slate-900 text-sm line-clamp-1">{product.name}</h3>
-                    </Link>
-                    
-                    {/* Model & Color Badges */}
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                      {product.model && <span>Mod: <strong className="text-slate-700">{product.model}</strong></span>}
-                      {product.color && <span>• Color: <strong className="text-slate-700">{product.color}</strong></span>}
-                    </div>
+              {/* Product Image */}
+              <Link href={`/products/${product.id}`} className="block w-full h-44 rounded-xl overflow-hidden bg-slate-50 relative">
+                <img
+                  src={product.imageUrl || "/placeholder.png"}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
 
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{product.description}</p>
-                  </div>
+              {/* Info */}
+              <div className="space-y-1 flex-1">
+                <Link href={`/products/${product.id}`} className="hover:text-blue-600 transition-colors block">
+                  <h3 className="font-bold text-slate-900 text-sm line-clamp-1">{product.name}</h3>
+                </Link>
+                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{product.description}</p>
+              </div>
 
-                  {/* Price & Action */}
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <div>
-                      {(product.onSale || (product.originalPrice && product.originalPrice > product.price)) && (
-                        <div className="flex items-center gap-1.5 mb-0.5">
-                          <span className="text-xs text-slate-400 line-through font-semibold">
-                            ${(product.originalPrice || Math.round(product.price * 1.2)).toLocaleString("es-AR")}
-                          </span>
-                          <span className="text-[9px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.2 rounded">
-                            {product.originalPrice && product.originalPrice > product.price
-                              ? `-${Math.round((1 - product.price / product.originalPrice) * 100)}%`
-                              : "OFERTA"}
-                          </span>
-                        </div>
-                      )}
-                      <span className={`text-lg font-extrabold ${product.onSale || (product.originalPrice && product.originalPrice > product.price) ? "text-rose-600 font-black" : "text-blue-600"}`}>
-                        ${product.price.toLocaleString("es-AR")}
-                      </span>
-                      {product.stock > 0 ? (
-                        <span className="text-[10px] text-emerald-600 font-semibold block">Stock: {product.stock} un.</span>
-                      ) : (
-                        <span className="text-[10px] text-rose-500 font-semibold block">Sin stock</span>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => addItem(product)}
-                      disabled={product.stock <= 0}
-                      className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center transition-all ${
-                        product.stock > 0
-                          ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs active:scale-95 cursor-pointer"
-                          : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                      }`}
-                      aria-label="Agregar al carrito"
-                    >
-                      +
-                    </button>
-                  </div>
+              {/* Price & Solid Blue '+' Button (Exact UI Match) */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-base font-extrabold ${product.onSale ? "text-blue-600" : "text-slate-900"}`}>
+                    ${product.price.toLocaleString("es-AR")}
+                  </span>
+                  {(product.onSale || (product.originalPrice && product.originalPrice > product.price)) && (
+                    <span className="text-xs text-slate-400 line-through font-semibold">
+                      ${(product.originalPrice || Math.round(product.price * 1.2)).toLocaleString("es-AR")}
+                    </span>
+                  )}
                 </div>
-              ))}
+
+                <button
+                  onClick={() => addItem(product)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold text-lg transition-all shadow-xs active:scale-95 cursor-pointer"
+                  title="Agregar al carrito"
+                  aria-label="Agregar al carrito"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          )}
-
-        </main>
-
-      </div>
+          ))}
+        </div>
+      )}
 
     </div>
   );
@@ -756,8 +678,8 @@ function CatalogContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="py-12 text-center text-slate-500 text-sm font-semibold">Cargando catálogo...</div>}>
-      <CatalogContent />
+    <Suspense fallback={<div className="py-20 text-center text-slate-400 font-bold">Cargando catálogo...</div>}>
+      <ProductsCatalogContent />
     </Suspense>
   );
 }
