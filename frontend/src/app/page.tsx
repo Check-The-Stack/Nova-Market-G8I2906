@@ -156,18 +156,6 @@ export default function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Check if admin has customized products in localStorage
-        try {
-          const stored = localStorage.getItem("novamarket_admin_products");
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setProducts(parsed);
-              return;
-            }
-          }
-        } catch (e) {}
-
         const response = await api.get("/products");
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {
           const list = response.data.map((p: any) => {
@@ -183,10 +171,34 @@ export default function HomePage() {
             };
           });
           setProducts(list);
+          try {
+            localStorage.setItem("novamarket_admin_products", JSON.stringify(list));
+          } catch (e) {}
+          return;
+        } else if (response.data?.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          setProducts(response.data.data);
+          try {
+            localStorage.setItem("novamarket_admin_products", JSON.stringify(response.data.data));
+          } catch (e) {}
+          return;
         }
       } catch (err) {
         console.log("Using fallback catalog products");
       }
+
+      // Check if admin has customized products in localStorage
+      try {
+        const stored = localStorage.getItem("novamarket_admin_products");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProducts(parsed);
+            return;
+          }
+        }
+      } catch (e) {}
+
+      setProducts(DEMO_PRODUCTS);
     };
     fetchProducts();
   }, []);

@@ -104,14 +104,31 @@ export default function AdminDashboardPage() {
   const [products, setProducts] = useState<Product[]>(DEMO_CATALOG);
   const [productFilterTab, setProductFilterTab] = useState<"all" | "sale" | "low_stock">("all");
 
-  // Cargar productos de localStorage si existen
+  // Cargar productos directamente de la API
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("novamarket_admin_products");
-      if (stored) {
-        setProducts(JSON.parse(stored));
+    async function loadAdminProducts() {
+      try {
+        const res = await api.get("/products");
+        const list = res.data?.data || (Array.isArray(res.data) ? res.data : []);
+        if (list && Array.isArray(list) && list.length > 0) {
+          setProducts(list);
+          try {
+            localStorage.setItem("novamarket_admin_products", JSON.stringify(list));
+          } catch (e) {}
+          return;
+        }
+      } catch (err) {
+        console.log("API offline, checking local storage for admin products");
       }
-    } catch (e) {}
+
+      try {
+        const stored = localStorage.getItem("novamarket_admin_products");
+        if (stored) {
+          setProducts(JSON.parse(stored));
+        }
+      } catch (e) {}
+    }
+    loadAdminProducts();
   }, []);
 
   const saveProducts = (updatedProducts: Product[]) => {
@@ -456,23 +473,29 @@ export default function AdminDashboardPage() {
     setIsProductModalOpen(true);
   };
 
-  const handleToggleProductSale = (productId: string) => {
-    const updated = products.map((p) => {
-      if (p.id === productId) {
-        const nextOnSale = !p.onSale;
-        return {
-          ...p,
-          onSale: nextOnSale,
-          originalPrice: nextOnSale ? (p.originalPrice || Math.round(p.price * 1.2)) : undefined,
-          badge: nextOnSale ? (p.badge || "SALE") : undefined,
-        };
-      }
-      return p;
-    });
-    saveProducts(updated);
+  const handleToggleProductSale = async (productId: string) => {
+    const targetProduct = products.find((p) => p.id === productId);
+    if (!targetProduct) return;
+
+    const nextOnSale = !targetProduct.onSale;
+    const updatedProd: Product = {
+      ...targetProduct,
+      onSale: nextOnSale,
+      originalPrice: nextOnSale ? (targetProduct.originalPrice || Math.round(targetProduct.price * 1.2)) : undefined,
+      badge: nextOnSale ? (targetProduct.badge || "SALE") : undefined,
+    };
+
+    const updatedList = products.map((p) => (p.id === productId ? updatedProd : p));
+    saveProducts(updatedList);
+
+    try {
+      await api.put(`/products/${productId}`, updatedProd);
+    } catch (err) {
+      console.log("Error syncing sale status to API:", err);
+    }
   };
 
-  const handleSubmitProduct = (e: React.FormEvent) => {
+  const handleSubmitProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsedPrice = parseFloat(productForm.price) || 0;
     const parsedOriginalPrice = productForm.originalPrice ? parseFloat(productForm.originalPrice) : (productForm.onSale ? Math.round(parsedPrice * 1.2) : undefined);
@@ -496,11 +519,34 @@ export default function AdminDashboardPage() {
     };
 
     if (editingProduct) {
-      saveProducts(products.map((p) => (p.id === editingProduct.id ? newProd : p)));
+      const updatedList = products.map((p) => (p.id === editingProduct.id ? newProd : p));
+      saveProducts(updatedList);
+      try {
+        await api.put(`/products/${editingProduct.id}`, newProd);
+      } catch (err) {
+        console.log("Error updating product via API:", err);
+      }
     } else {
-      saveProducts([newProd, ...products]);
+      const updatedList = [newProd, ...products];
+      saveProducts(updatedList);
+      try {
+        await api.post("/products", newProd);
+      } catch (err) {
+        console.log("Error creating product via API:", err);
+      }
     }
     setIsProductModalOpen(false);
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("¿Está seguro de eliminar este producto del catálogo?")) return;
+    const updatedList = products.filter((p) => p.id !== productId);
+    saveProducts(updatedList);
+    try {
+      await api.delete(`/products/${productId}`);
+    } catch (err) {
+      console.log("Error deleting product via API:", err);
+    }
   };
 
   // Access Denied Screen
@@ -869,7 +915,7 @@ export default function AdminDashboardPage() {
                               <button onClick={() => handleOpenProductModal(p)} className="text-xs font-bold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
                                 Editar
                               </button>
-                              <button onClick={() => saveProducts(products.filter((item) => item.id !== p.id))} className="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 cursor-pointer">
+                              <button onClick={() => handleDeleteProduct(p.id)} className="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 cursor-pointer">
                                 Eliminar
                               </button>
                             </div>

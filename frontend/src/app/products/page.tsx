@@ -163,21 +163,6 @@ function CatalogContent() {
       try {
         setLoading(true);
 
-        // Check if admin has customized products in localStorage
-        let storedAdminProducts: Product[] | null = null;
-        try {
-          const stored = localStorage.getItem("novamarket_admin_products");
-          if (stored) {
-            storedAdminProducts = JSON.parse(stored);
-          }
-        } catch (e) {}
-
-        if (storedAdminProducts && storedAdminProducts.length > 0) {
-          setProducts(storedAdminProducts);
-          setLoading(false);
-          return;
-        }
-
         const res = await api.get("/products");
         let list: Product[] = [];
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -192,21 +177,38 @@ function CatalogContent() {
             const fallbackMatch = CATALOG_FALLBACK.find((f) => f.id === p.id || f.name === p.name);
             return {
               ...p,
-              brand: p.brand || fallbackMatch?.brand || (p.name.includes("Apple") || p.name.includes("MacBook") || p.name.includes("iPhone") ? "Apple" : p.name.includes("Sony") ? "Sony" : p.name.includes("Samsung") ? "Samsung" : p.name.includes("Logitech") ? "Logitech" : p.name.includes("Dell") ? "Dell" : p.name.includes("Keychron") ? "Keychron" : "Genérica"),
-              model: p.model || fallbackMatch?.model || p.name.split(" ").slice(0, 3).join(" "),
+              brand: p.brand || fallbackMatch?.brand || "NovaTech",
+              model: p.model || fallbackMatch?.model || p.name,
               color: p.color || fallbackMatch?.color || "Negro",
               onSale: p.onSale ?? fallbackMatch?.onSale ?? false,
-              originalPrice: p.originalPrice || fallbackMatch?.originalPrice,
-              badge: p.badge || fallbackMatch?.badge,
+              originalPrice: p.originalPrice || fallbackMatch?.originalPrice || (p.onSale ? p.price * 1.2 : undefined),
+              badge: p.badge || fallbackMatch?.badge || (p.onSale ? "SALE" : undefined),
             };
           });
           setProducts(enriched);
+          try {
+            localStorage.setItem("novamarket_admin_products", JSON.stringify(enriched));
+          } catch (e) {}
+          return;
         }
       } catch (err) {
-        console.log("Using catalog fallback");
-      } finally {
-        setLoading(false);
+        console.log("Using local/fallback products catalog");
       }
+
+      // Check if admin has customized products in localStorage
+      try {
+        const stored = localStorage.getItem("novamarket_admin_products");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProducts(parsed);
+            return;
+          }
+        }
+      } catch (e) {}
+
+      setProducts(CATALOG_FALLBACK);
+      setLoading(false);
     }
     fetchProducts();
   }, []);
