@@ -354,42 +354,13 @@ function ProductsCatalogContent() {
   return (
     <div className="space-y-8 py-4 pb-16">
       
-      {/* 1. TOP PROMO SPECIAL BANNER - EXACT UI MATCH (Catalo.png) */}
-      <section className="relative rounded-3xl overflow-hidden bg-slate-950 border border-slate-800 shadow-xl min-h-[260px] sm:min-h-[340px] flex items-center">
-        {/* Laptop Hero Background */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/images/portada.png"
-            alt="Promo Especial"
-            className="w-full h-full object-cover object-center"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 w-full p-6 sm:p-10 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
-          <div className="hidden md:block md:w-1/2" />
-          
-          <div className="max-w-md md:text-right space-y-2 ml-auto">
-            <span className="text-cyan-400 font-extrabold text-[11px] uppercase tracking-[0.2em] block">
-              PROMO ESPECIAL
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-              Potenciá tu <br />
-              productividad
-            </h1>
-            <div className="pt-2">
-              <span className="text-sm text-slate-300 font-semibold block">Hasta</span>
-              <div className="text-cyan-400 font-black text-5xl sm:text-6xl tracking-tight leading-none">
-                35% <span className="text-2xl sm:text-3xl text-white font-black">OFF</span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium mt-1">
-                en laptops seleccionadas
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* 1. TOP PROMO SPECIAL BANNER - PORTADA CATALOGO (portada.png) */}
+      <section className="w-full">
+        <img
+          src="/images/portada.png"
+          alt="Promo Especial - Potenciá tu productividad Hasta 35% OFF"
+          className="w-full h-auto rounded-3xl block"
+        />
       </section>
 
       {/* 2. HORIZONTAL CATEGORY PILLS BAR - EXACT UI MATCH (Catalo.png) */}

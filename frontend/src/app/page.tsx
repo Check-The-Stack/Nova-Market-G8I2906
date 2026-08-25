@@ -210,36 +210,13 @@ export default function HomePage() {
   return (
     <div className="space-y-16 py-4 pb-16">
       
-      {/* 1. HERO BANNER - EXACT UI MATCH (Landing Page (Inicio).jpg) */}
-      <section className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-100 via-blue-50/50 to-slate-200/80 border border-slate-200/90 shadow-sm min-h-[380px] sm:min-h-[460px] flex items-center">
-        {/* Background Image if available */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/images/hero-banner.png"
-            alt="Hero Banner Background"
-            className="w-full h-full object-cover object-right"
-            onError={(e) => {
-              // Fallback if local image not found
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-        </div>
-
-        {/* Content on the Left */}
-        <div className="relative z-10 max-w-xl p-8 sm:p-12 md:p-14 space-y-6">
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-[1.15] tracking-tight">
-              Ingeniería de <br />
-              excelencia para tu <br />
-              <span className="text-blue-600">vida digital</span>
-            </h1>
-            <div className="w-16 h-1 bg-blue-600 rounded-full" />
-          </div>
-
-          <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed max-w-md">
-            Descubre la nueva generación de hardware de ingeniería de precisión. El minimalismo se fusiona con el máximo rendimiento en nuestra nueva colección exclusiva.
-          </p>
-        </div>
+      {/* 1. HERO BANNER - PORTADA HOME (portada-home.png) */}
+      <section className="w-full">
+        <img
+          src="/images/portada-home.png"
+          alt="Ingeniería de excelencia para tu vida digital"
+          className="w-full h-auto rounded-3xl block"
+        />
       </section>
 
       {/* 2. BENTO GRID: "Explora Nuestro productos" - EXACT UI MATCH */}
